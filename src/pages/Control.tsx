@@ -7,6 +7,7 @@ console.log("entered control")
 const Panel = lazy(() => import("../components/Panel.js"))
 
 const Control = () => {
+    
     const [matrix, setMatrix] = useState({array: []})
     const [insertType, setInsertType] = useState({})
 

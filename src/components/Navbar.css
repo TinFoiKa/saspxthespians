@@ -99,7 +99,8 @@ nav ul {
 nav ul li {
 	margin: 0px;
 	display:inline-block;
-	float: left;background-color: #5c6cf8;
+	float: left;
+	background-color: #5c6cf8;
 	}
 
 /* Styling the links */

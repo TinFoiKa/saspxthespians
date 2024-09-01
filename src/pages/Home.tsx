@@ -1,23 +1,45 @@
+import { useEffect, useState } from "react"
+import axios from "axios"
 import "./Home.css"
 
 
 const Home = () => {
-    const showIt = () => {
-        const toBeShown = document.getElementsByClassName("content-wrapper")[0]; // consider adding :not(.scrolled) to selector to reduce the number of iterations if you don't want to support scrolling up
-      
-        // consider taking this outside of the loop and resetting it on window resize to optimize the loop
-        const halfScreen = window.innerHeight / 0.3;
+    const [data, setData] = useState({})
+    /*const showIt = () => {
+        const toBeShown = document.getElementsByClassName("content-wrapper")[0];
+
+        const screenPortion = window.innerHeight / 0.3;
       
         const scrolled = (window.scrollY + window.innerHeight);// - (item.offsetHeight/2);
       
-          if (toBeShown.offsetTop - window.scrollY < halfScreen) {
+          if (toBeShown.offsetTop - window.scrollY < screenPortion) {
             toBeShown.classList.add('content-opacity');
           } else {
             toBeShown.classList.remove('content-opacity');
           }
     }
       
-    window.addEventListener('scroll', showIt);
+    window.addEventListener('scroll', showIt);*/
+
+    useEffect(
+        () => {
+            console.log("based")
+            const getPageData = async () => {
+                const response = await axios.post("https://sasthespians.aaronli69.workers.dev/")
+
+                const data = response.data.res
+
+                console.log(data)
+
+                setData(data)
+            }
+            
+
+            getPageData()
+        }
+    , [])
+    
+    
     return (
         <>
 <div className="splash-container">

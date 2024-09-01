@@ -19,14 +19,14 @@ const Navbar = (props: { permissions: boolean }) => {
         <label htmlFor="drop" className="toggle">Menu</label>
         <input type="checkbox" id="drop" />
             <ul className="menu">
-                <li><a href="#">Home</a></li>
+                <li><a href="#" onClick = {() => navigate("")}>Home</a></li>
                 <li>
                     <label htmlFor="drop-1" className="toggle">Members + Apprentices</label>
                     <a>Members + Apprentices</a>
                     <input type="checkbox" id="drop-1"/>
                     <ul>
                         <li><a href="#">Roster</a></li>
-                        <li><a onClick = {() => navigate("points")}>Points</a></li>
+                        <li><a href="" onClick = {() => navigate("points")}>Points</a></li>
                         <li><a href="">Other Forms</a></li>
                     </ul> 
 
@@ -39,7 +39,7 @@ const Navbar = (props: { permissions: boolean }) => {
                 <ul>
                     <li><a href="#">Documentation</a></li>
                     <li><a href="#">Notion</a></li>
-                    <li><a onClick = {() => navigate("officers")}>Control Panel</a>
+                    <li><a href="#/officers" >Control Panel</a>
                     {/*<label htmlFor="drop-3" className="toggle">Tutorials +</label>
                     <a href="#">Tutorials</a>         
                     <input type="checkbox" id="drop-3"/>
@@ -60,7 +60,7 @@ const Navbar = (props: { permissions: boolean }) => {
                 <input type="checkbox" id="drop-3"/>
                 <ul>
                     <li><a href="#">Settings</a></li>
-                    <li><a onClick = {() => navigate("officers")}>Logout</a>
+                    <li><a href="" onClick = {() => navigate("officers")}>Logout</a>
                     {/*<label htmlFor="drop-3" className="toggle">Tutorials +</label>
                     <a href="#">Tutorials</a>         
                     <input type="checkbox" id="drop-3"/>

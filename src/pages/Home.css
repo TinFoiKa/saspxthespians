@@ -4,6 +4,11 @@
     box-sizing: border-box;
 }
 
+#root {
+    /*environment variables */
+    --backimage: "blank"
+}
+
 /*
  * -- BASE STYLES --
  * Most of these are inherited from Base, but I want to change a few.
@@ -131,6 +136,8 @@ a.pure-button-primary {
  * This is the blue top section that appears on the page.
  */
 
+
+
 .splash-container {
     background: #1f8dd6;
     z-index: 2;
@@ -141,6 +148,7 @@ a.pure-button-primary {
     top: 0;
     left: 0;
     position: fixed !important;
+    background-image: image(var(--backimage));
 }
 
 .splash {
