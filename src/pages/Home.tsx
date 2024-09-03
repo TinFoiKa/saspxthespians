@@ -1,9 +1,9 @@
-import { useEffect, useState } from "react"
+import { useEffect, /*useState */ } from "react"
 import "./Home.css"
 
 
 const Home = () => {
-    const [data, setData] = useState({})
+    //const [data, setData] = useState({})
     /*const showIt = () => {
         const toBeShown = document.getElementsByClassName("content-wrapper")[0];
 
@@ -13,7 +13,7 @@ const Home = () => {
       
           if (toBeShown.offsetTop - window.scrollY < screenPortion) {
             toBeShown.classList.add('content-opacity');
-          } else {
+          } else { 
             toBeShown.classList.remove('content-opacity');
           }
     }
@@ -27,7 +27,7 @@ const Home = () => {
                 fetch("https://sasthespians.aaronli69.workers.dev", {
                     method: "POST",
                     headers: { 
-                        "Content-type": "application/json; charset=UTF-8"
+                        "Content-type": "application/json"
                     } 
                 })
                 .then(response => response.json)
