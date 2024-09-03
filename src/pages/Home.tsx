@@ -26,9 +26,6 @@ const Home = () => {
             const getPageData = async () => {
                 fetch("https://sasthespians.aaronli69.workers.dev", {
                     method: "POST",
-                    headers: { 
-                        "Content-type": "application/json"
-                    } 
                 })
                 .then(response => response.json)
                 .then(json => console.log(json))
