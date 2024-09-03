@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react"
-import axios from "axios"
 import "./Home.css"
 
 
@@ -33,12 +32,6 @@ const Home = () => {
                 })
                 .then(response => response.json)
                 .then(json => console.log(json))
-
-                const data = response.data.res
-
-                console.log(data)
-
-                setData(data)
             }
             
 
