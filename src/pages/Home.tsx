@@ -25,7 +25,14 @@ const Home = () => {
         () => {
             console.log("based")
             const getPageData = async () => {
-                const response = await axios.post("https://sasthespians.aaronli69.workers.dev/")
+                fetch("https://sasthespians.aaronli69.workers.dev", {
+                    method: "POST",
+                    headers: { 
+                        "Content-type": "application/json; charset=UTF-8"
+                    } 
+                })
+                .then(response => response.json)
+                .then(json => console.log(json))
 
                 const data = response.data.res
 
