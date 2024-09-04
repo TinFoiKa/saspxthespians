@@ -24,7 +24,7 @@ const Home = () => {
         () => {
             console.log("based")
             const getPageData = async () => {
-                fetch("https://sasthespians.aaronli69.workers.dev/databases/ca6302f3f51f4553b3ae0be8a9b83036?v=4fe3c5023b054c3aafbd84b551c0d69c/query")
+                fetch("https://sasthespians.aaronli69.workers.dev/databases/ca6302f3f51f4553b3ae0be8a9b83036?v=4fe3c5023b054c3aafbd84b551c0d69c/query", {method: "POST"})
                 .then(response => response.json)
                 .then(json => console.log(json))
             }
