@@ -24,7 +24,7 @@ const Home = () => {
         () => {
             console.log("based")
             const getPageData = async () => {
-                fetch("https://sasthespians.aaronli69.workers.dev/databases/ca6302f3f51f4553b3ae0be8a9b83036/query", 
+                const response = await fetch("https://sasthespians.aaronli69.workers.dev/databases/ca6302f3f51f4553b3ae0be8a9b83036/query", 
                     {
                         method: "POST", 
                         body: JSON.stringify({filter: {
@@ -40,8 +40,7 @@ const Home = () => {
                             ]
                         }})
                     })
-                .then(response => response.json)
-                .then(json => console.log(json.toString()))
+                console.log(response.json)
             }
             
 
