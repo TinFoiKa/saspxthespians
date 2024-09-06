@@ -34,6 +34,10 @@ label {
     height: auto;
 }
 
+.images {
+	width: 30%;
+}
+
 /*
  * -- LAYOUT STYLES --
  * These are some useful classes which I will need

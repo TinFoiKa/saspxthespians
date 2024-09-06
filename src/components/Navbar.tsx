@@ -1,15 +1,22 @@
 import { useNavigate } from "react-router-dom"
 
 import "./Navbar.css"
+import { useState , useEffect } from "react"
 
 const Navbar = (props: { permissions: boolean }) => {
+    const [login, setLogin] = useState({})
+
     const navigate = useNavigate()
     if (props.permissions == true) {
         const secret = document.getElementById("restricted") || document.createElement("div")
         secret.removeAttribute("hidden")
     }
 
-    // stylin
+    useEffect(
+        () => {
+            setLogin(false)
+        }
+    , [])
         
     return (
         <>
@@ -20,7 +27,7 @@ const Navbar = (props: { permissions: boolean }) => {
         <input type="checkbox" id="drop" />
             <ul className="menu">
                 <li><a href="#" onClick = {() => navigate("")}>Home</a></li>
-                <li>
+                {login ? <li>
                     <label htmlFor="drop-1" className="toggle">Members + Apprentices</label>
                     <a>Members + Apprentices</a>
                     <input type="checkbox" id="drop-1"/>
@@ -30,9 +37,9 @@ const Navbar = (props: { permissions: boolean }) => {
                         <li><a href="">Other Forms</a></li>
                     </ul> 
 
-                </li>
-                <li>
+                </li>: <></>}
 
+                {props.permissions ? <li>
                 <label htmlFor="drop-2" className="toggle">Officer +</label>
                 <a href="#">For Officers</a>
                 <input type="checkbox" id="drop-2"/>
@@ -40,22 +47,15 @@ const Navbar = (props: { permissions: boolean }) => {
                     <li><a href="#">Documentation</a></li>
                     <li><a href="#">Notion</a></li>
                     <li><a href="#/officers" >Control Panel</a>
-                    {/*<label htmlFor="drop-3" className="toggle">Tutorials +</label>
-                    <a href="#">Tutorials</a>         
-                    <input type="checkbox" id="drop-3"/>
-
-                    <ul>
-                        <li><a href="#">HTML/CSS</a></li>
-                        <li><a href="#">jQuery</a></li>
-                        <li><a href="#">Other</a></li>
-                    </ul>*/}
                     </li>
                 </ul>
-                </li>
+                </li> : <></>}
                 <li><a href="#">Feedback</a></li>
                 <li><a href="#">Contact</a></li>
+
+                {login ? <></> : <li><a href = "#/login">Login</a></li>}
+
                 <li>
-                <label htmlFor="drop-3" className="toggle">Officer +</label>
                 <a href="#"><img src = "../assets/settings.svg"></img></a>
                 <input type="checkbox" id="drop-3"/>
                 <ul>

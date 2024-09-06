@@ -1,9 +1,9 @@
-import { useEffect, /*useState */ } from "react"
+import { useEffect, useState } from "react"
 import "./Home.css"
 
 
 const Home = () => {
-    //const [data, setData] = useState({})
+    const [photos, setPhotos] = useState()
     /*const showIt = () => {
         const toBeShown = document.getElementsByClassName("content-wrapper")[0];
 
@@ -40,7 +40,9 @@ const Home = () => {
                             ]
                         }})
                     })
-                console.log(response.json)
+                const content = await response.json()
+                console.log(content)
+                setPhotos(content)
             }
             
 
@@ -48,6 +50,15 @@ const Home = () => {
         }
     , [])
     
+    const getPhotoLink = (tag: number) : string => {
+        if(photos != undefined){
+            // dir = results[0].properties["Files & Media"].files[0]
+            // 0 is PR,  7 is fall play, 
+            const file = photos.results[tag].properties["Files & Media"].files[0]
+            return file.file.url
+        }
+        return ""
+    }
     
     return (
         <>
@@ -74,9 +85,9 @@ const Home = () => {
                     <i className="fa fa-rocket"></i>
                     Fall Play
                 </h3>
-                <p>
-                    {/*notion*/ "Notion API is not responding" }
-                </p>
+
+                <img src = {getPhotoLink(7)} className = "images"></img>{ /*tag is 7 for the fall play file*/ }
+
             </div>
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
                 <h3 className="content-subhead">
@@ -84,7 +95,7 @@ const Home = () => {
                     Spring Musical
                 </h3>
                 <p>
-                    {/*notion*/ "Notion API is not responding" }
+                    {}
                 </p>
             </div>
         </div>
