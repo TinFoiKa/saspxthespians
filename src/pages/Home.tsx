@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react"
+import { JSXElementConstructor, useEffect, useState } from "react"
 import "./Home.css"
 
 
@@ -53,16 +53,29 @@ const Home = () => {
     const getPhotoLink = (tag: number) : string => {
         if(photos != undefined){
             // dir = results[0].properties["Files & Media"].files[0]
-            // 0 is PR,  7 is fall play, 
+            // 0 is PR, 1 is webmaster, 2 is historian, 3 is VP, 4 is Bgnd, 5 is Spring Musical, 6 is Pres, 7 is fall play, 
             const file = photos.results[tag].properties["Files & Media"].files[0]
-            return file.file.url
+            try {
+                return file.file.url
+            } catch {
+                return ""
+            }
         }
         return ""
     }
     
+    const getInsert = (tag: number) => {
+        const url = getPhotoLink(tag)
+        
+        return url != "" ?
+        <img src = {url} className = "images"></img> 
+        : 
+        "waiting on Notion API..."
+    }
+    
     return (
         <>
-<div className="splash-container">
+<div className="splash-container" style = {{backgroundImage: getPhotoLink(4)}}>
     <div className="splash">
         <h1 className="splash-head">SAS Puxi Thespians</h1>
         <p className="splash-subhead">
@@ -86,7 +99,7 @@ const Home = () => {
                     Fall Play
                 </h3>
 
-                <img src = {getPhotoLink(7)} className = "images"></img>{ /*tag is 7 for the fall play file*/ }
+                {getInsert(7)} 
 
             </div>
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
@@ -94,9 +107,7 @@ const Home = () => {
                     <i className="fa fa-mobile"></i>
                     Spring Musical
                 </h3>
-                <p>
-                    {}
-                </p>
+                {getInsert(5)} 
             </div>
         </div>
     </div>
@@ -111,7 +122,7 @@ const Home = () => {
                     <i className="fa fa-rocket"></i>
                     President
                 </h3>
-                {/*notion*/ "Notion API is not responding" }
+                {getInsert(6)} 
             </div>
             <div className="grid"> 
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
@@ -119,14 +130,14 @@ const Home = () => {
                     <i className="fa fa-mobile"></i>
                     Vice President
                 </h3>
-                {/*notion*/ "Notion API is not responding" }
+                {getInsert(3)} 
             </div>
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
                 <h3 className="content-subhead">
                     <i className="fa fa-mobile"></i>
                     Historian
                 </h3>
-                {/*notion*/ "Notion API is not responding" }
+                {getInsert(2)} 
             </div></div>
             <div className="grid"> 
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
@@ -135,7 +146,7 @@ const Home = () => {
                     Webmaster
                 </h3>
                 <p>
-                    {/*notion*/ "Notion API is not responding" }
+                    {getInsert(1)} 
                 </p>
             </div>
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
@@ -144,7 +155,7 @@ const Home = () => {
                     Public Relations
                 </h3>
                 <p>
-                    {/*notion*/ "Notion API is not responding" }
+                    {getInsert(0)} 
                 </p>
             </div></div>
         </div>
