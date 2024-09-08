@@ -75,7 +75,10 @@ const Home = () => {
     
     return (
         <>
-<div className="splash-container" style = {{backgroundImage: getPhotoLink(4)}}>
+
+
+<div className="splash-container">
+<div className = "blur-line"><div className = "inner-fill"></div></div>
     <div className="splash">
         <h1 className="splash-head">SAS Puxi Thespians</h1>
         <p className="splash-subhead">
