@@ -14,30 +14,45 @@ class OwnNode {
         this.parent = node
     }
 
-    static converted(array: string[]) {
+    converted(string: string) : OwnNode {
+        this.group(string, 0, this)
+        return this
+    }
+
+    // given tree string is an unbalanced array - cannot do simple binary tree calculations'
+    private group(string: string, level: number, node: OwnNode) : void {
+        // base case
+        if (level > 2) {
+            node.val = string
+            console.log("")
+            return
+        }
+
+        // const leftSubstring = string.match(/\{.+\} ([A-Z]{2}|[A-Z]{3}) \{.+\}/g)
+        const reg : RegExp[] = [/\{.+\}/g, /\[.+\]/g, /\(.+\)/g]
+        const roots : RegExpMatchArray = string.match(reg[level]) || ["null"] // this system will use 3 layers, checking from up to down/in to out. {[()]}]
+
+        // defining operation, left and right logic
+        const firstExp = roots[0].length
+        const left = roots[0]
+        const right = roots[1]
+        const oper = string.substring(firstExp, firstExp + 2).trimEnd()
+
+        // populating node tree
+        node.val = oper
+        node.l = new OwnNode("")
+        node.r = new OwnNode("")
+        this.group(left, level + 1, node.l) // both exit recursion.
+        this.group(right, level + 1, node.r)
+    }
+
+   /* static converted(array: string[]) {
         if (array == null || array.length == 0) {
             return undefined
         }
 
         return OwnNode.build(array, 0, array.length -1)
-    }
-
-    private static build(array: string[], lo: number, hi: number, parent?: OwnNode) {
-        if (lo > hi)
-        {
-            return undefined;
-        }
-    
-        const mid : number = lo + (hi - lo) / 2;
-        const root = new OwnNode(array[mid]);
-
-        if (parent != undefined)    root.setParent(parent) // parent tracking
-
-        root.l = OwnNode.build(array, lo, mid - 1, root);
-        root.r = OwnNode.build(array, mid + 1, hi, root);
-
-        return root;
-    }
+    }*/
 
 }
 

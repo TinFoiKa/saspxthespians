@@ -1,5 +1,5 @@
 import OwnNode from "./node-tree"
-import Stack from "./stack-handle"
+import Queue from "./queue-handle"
 
 class notionRequest {
     url = "https://sasthespians.aaronli69.workers.dev"
@@ -14,7 +14,7 @@ class databaseQuery extends notionRequest{
     dir = "/databases/"+ this.location + "/query"
     method = "POST"
     logic: string
-    commandstack = new Stack<string>()
+    commandQueue = new Queue<string>()
 
     constructor(logic: string, location?: string) { // in terms of logic, ({prop} {quality}) {GATE} ({prop} {quality}) BINARY TREE
         super(location);
@@ -23,20 +23,14 @@ class databaseQuery extends notionRequest{
 
     // translation of logic to tree, then object
     requestObj() {
-        // group objects into parenthesis groups
-        let string = this.logic
-        
-        
+        // group objects into {[()]}
+        const tree = new OwnNode("")
+        tree.converted(this.logic)
 
-        const finalCommand = "{"; // JSON string to be parsed
-
-        const stringArray: string[] = this.logic.split(" ")
-        const tree = OwnNode.converted(stringArray) || undefined
-
-        const node = tree != undefined ? tree.val : "0"
+        const node = tree ? tree.val : "0"
 
         if (node != "0") {
-            return JSON.parse(this.hydrateGate(finalCommand, tree))
+            return JSON.parse(this.hydrateGate("{", tree) + "}")
         } else {
             return "no object"
         }
@@ -46,19 +40,6 @@ class databaseQuery extends notionRequest{
     FunctionNames = Object.freeze({
         group: "" 
     })
-
-    private group(string: string) : string[] {
-        if(string.charAt(0).match("[(]")){
-            // open loop to find next group, split string at the ending index
-            let index = 0
-            for (index = 0; index <= string.length; index++){
-                if (string.charAt(index).match("[)]")){
-                    
-                }
-            }
-            return [string.substring(1, index)]
-        }
-    }
 
     private hydrateGate(command: string, node: OwnNode | undefined): string{
         if (node != undefined) {
@@ -70,7 +51,7 @@ class databaseQuery extends notionRequest{
                     command += "and: ["
                     return this.hydrateGate(command, node.l) + this.hydrateGate(command, node.r) + "]"
                 default: // not a gate; because of tree structure, props and values are at the bottom
-                    return this.hydrateItems(command, node) + this.hydrateItems(command, node)
+                    return this.hydrateItems(command, node) // the value would be "(props assignment)"
             }
         } else {
             return "erroneous input"
@@ -78,21 +59,38 @@ class databaseQuery extends notionRequest{
     }
 
     private hydrateItems(command: string, node: OwnNode | undefined): string {
-        // deepest-layer items (node is left, but you also have the sibling)
-        if (node && node.parent && node.parent.r) {
-            let string = command + "{property:" + node // populate "property"
+        if (node == undefined) {
+            console.log("bad ending nodes")
+            return ""
+        }
+        // deepest-layer items (props assignment)
+        const trimmed = node.val.trim().substring(1, node.val.length - 2)
+        let split : string[] = []
+        const match = trimmed.match(/'.+'/g)
+        if (match) {
+            split = [match[0].substring(1, match[0].length-2), trimmed.substring(match[0].length, trimmed.length-1)]
+        } else {
+            split = trimmed.split(" ")
+        }
 
-            const quality = node.parent.r.val
-            switch (quality) { // catch a few special cases
-                case ("checked"):
-                    string += ", checkbox: { equals: true }"
-                    break;
-                default: 
-                    if (quality.includes(">")) // next do greater than, less than checking   
-            }
+        let string = command + "{property: " + split[0]
+
+        const quality = split[1]
+        switch (quality) { // catch a few special cases: Check - Greater than, less than - 
+            case ("checked"):
+                string += ", checkbox: { equals: true }"
+                break;
+            case ("notChecked"):
+                string += ", checkbox: { equals: false }"
+                break;
+            default:  
+                // comparison checks
+                switch(quality.charAt(0)) {
+                    case (">")
+                }
+        }
 
             return string
-        }
         return "erroneous value"
     }
     
