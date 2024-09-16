@@ -1,4 +1,4 @@
-import "./points.css"
+import "./Points.css"
 import { ChangeEvent, useEffect, useState } from "react"
 import { databaseQuery } from "../handlers/notion-handler"
 import ActivitySelection from "../components/ActivitySelection"
