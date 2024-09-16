@@ -12,7 +12,7 @@ const Navbar = () => {
         const updatePermissions = () => {
             const cookie = document.cookie.split("=")[1]
 
-            if (cookie != ""){
+            if (cookie){
                 const login = JSON.parse(document.cookie.split("=")[1])
                 setPerms(login.perms)
             }  
