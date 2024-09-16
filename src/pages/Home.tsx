@@ -1,5 +1,6 @@
-import { JSXElementConstructor, useEffect, useState } from "react"
+import { useEffect, useState } from "react"
 import "./Home.css"
+import { databaseQuery } from "../handlers/notion-handler"
 
 
 const Home = () => {
@@ -24,28 +25,14 @@ const Home = () => {
         () => {
             console.log("based")
             const getPageData = async () => {
-                const response = await fetch("https://sasthespians.aaronli69.workers.dev/databases/ca6302f3f51f4553b3ae0be8a9b83036/query", 
-                    {
-                        method: "POST", 
-                        body: JSON.stringify({filter: {
-                            or: [
-                                {
-                                    property: "name",
-                                    isNotEmpty: true
-                                },
-                                {
-                                    property: "tags",
-                                    isNotEmpty: true
-                                }
-                            ]
-                        }})
-                    })
-                const content = await response.json()
-                console.log(content)
-                setPhotos(content)
+                const websitePhotos = "ca6302f3f51f4553b3ae0be8a9b83036"
+                const query = new databaseQuery("{Displayed checked}", websitePhotos)
+                const response = await (await query.execute()).json()
+                console.log(response)
+                setPhotos(response)
             }
+        
             
-
             getPageData()
         }
     , [])
@@ -70,7 +57,7 @@ const Home = () => {
         return url != "" ?
         <img src = {url} className = "images"></img> 
         : 
-        "waiting on Notion API..."
+        "waiting for a response from Notion API..."
     }
     
     return (
@@ -79,12 +66,14 @@ const Home = () => {
 
 <div className="splash-container">
 <div className = "blur-line"><div className = "inner-fill"></div></div>
+<div className="splash-image">{getInsert(4)}</div>
     <div className="splash">
+        
         <h1 className="splash-head">SAS Puxi Thespians</h1>
         <p className="splash-subhead">
             International Thespians Society Troupe 6818
         </p>
-        <p>
+        <p className="padtop">
             <a href="" className="pure-button pure-button-primary">Watch Our Shows</a>
         </p>
     </div>

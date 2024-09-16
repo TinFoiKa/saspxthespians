@@ -75,7 +75,7 @@ body{
   }
 }
 
-input {
+.info {
   padding:10px;
   border: none;
   border-bottom: 2px solid #0000006e; 
@@ -103,6 +103,14 @@ input {
   &[type="password"] {
     top: calc(40% + 7.5vh);
   }
+
+  
+}
+
+.store {
+  position: absolute;
+    top: calc(40% + 12vh);
+    left: 7vh
 }
 
 .app-button {

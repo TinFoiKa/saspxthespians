@@ -21,7 +21,7 @@ class OwnNode {
 
     // given tree string is an unbalanced array - cannot do simple binary tree calculations'
     private group(string: string, level: number, node: OwnNode) : void {
-        // base case
+        // final case - level is greater than the () level
         if (level > 2) {
             node.val = string
             console.log("")
@@ -35,15 +35,21 @@ class OwnNode {
         // defining operation, left and right logic
         const firstExp = roots[0].length
         const left = roots[0]
-        const right = roots[1]
-        const oper = string.substring(firstExp, firstExp + 2).trimEnd()
 
-        // populating node tree
-        node.val = oper
-        node.l = new OwnNode("")
-        node.r = new OwnNode("")
-        this.group(left, level + 1, node.l) // both exit recursion.
-        this.group(right, level + 1, node.r)
+        
+        if(roots.length > 1) { // in case of middle operation,
+            const right = roots[1]
+            const oper = string.substring(firstExp, firstExp + 2).trimEnd()
+            // populate node tree
+            node.val = oper   
+            node.l = new OwnNode("")
+            node.r = new OwnNode("")
+            this.group(left, level + 1, node.l) // both exit recursion.
+            this.group(right, level + 1, node.r) 
+        } else {
+            node.val = left // catch case that original expression is the lowest level of logic.
+        }
+        
     }
 
    /* static converted(array: string[]) {

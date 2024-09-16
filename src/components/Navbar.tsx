@@ -1,22 +1,33 @@
 import { useNavigate } from "react-router-dom"
 
 import "./Navbar.css"
-import { useState , useEffect } from "react"
+import { useEffect, useState } from "react"
 
-const Navbar = (props: { permissions: boolean }) => {
-    const [login, setLogin] = useState({})
+const Navbar = () => {
+    const [perms, setPerms] = useState(0)
 
     const navigate = useNavigate()
-    if (props.permissions == true) {
-        const secret = document.getElementById("restricted") || document.createElement("div")
-        secret.removeAttribute("hidden")
-    }
 
-    useEffect(
-        () => {
-            setLogin(false)
+    useEffect(() => {
+        const updatePermissions = () => {
+            const cookie = document.cookie.split("=")[1]
+
+            if (cookie != ""){
+                const login = JSON.parse(document.cookie.split("=")[1])
+                setPerms(login.perms)
+            }  
+            else{
+                setPerms(0)
+            }
+                
         }
-    , [])
+        
+        updatePermissions()
+    }, [])
+
+    const logout = () => {
+        document.cookie = "auth = "
+    }
         
     return (
         <>
@@ -27,19 +38,19 @@ const Navbar = (props: { permissions: boolean }) => {
         <input type="checkbox" id="drop" />
             <ul className="menu">
                 <li><a href="#" onClick = {() => navigate("")}>Home</a></li>
-                {login ? <li>
+                {perms > 0 ? <li>
                     <label htmlFor="drop-1" className="toggle">Members + Apprentices</label>
                     <a>Members + Apprentices</a>
                     <input type="checkbox" id="drop-1"/>
                     <ul>
                         <li><a href="#">Roster</a></li>
-                        <li><a href="" onClick = {() => navigate("points")}>Points</a></li>
+                        <li><a href="#/points" onClick = {() => navigate("points")}>Points</a></li>
                         <li><a href="">Other Forms</a></li>
                     </ul> 
 
                 </li>: <></>}
 
-                {props.permissions ? <li>
+                {perms == 3 ? <li>
                 <label htmlFor="drop-2" className="toggle">Officer +</label>
                 <a href="#">For Officers</a>
                 <input type="checkbox" id="drop-2"/>
@@ -53,14 +64,14 @@ const Navbar = (props: { permissions: boolean }) => {
                 <li><a href="#">Feedback</a></li>
                 <li><a href="#">Contact</a></li>
 
-                {login ? <></> : <li><a href = "#/login">Login</a></li>}
+                {perms > 0 ? <></> : <li><a href = "#/login">Login</a></li>}
 
                 <li>
                 <a href="#"><img src = "../assets/settings.svg"></img></a>
                 <input type="checkbox" id="drop-3"/>
                 <ul>
                     <li><a href="#">Settings</a></li>
-                    <li><a href="" onClick = {() => navigate("officers")}>Logout</a>
+                    {perms > 0 ? <li><a href="" onClick = {logout}>Logout</a></li>: <></>}
                     {/*<label htmlFor="drop-3" className="toggle">Tutorials +</label>
                     <a href="#">Tutorials</a>         
                     <input type="checkbox" id="drop-3"/>
@@ -70,7 +81,7 @@ const Navbar = (props: { permissions: boolean }) => {
                         <li><a href="#">jQuery</a></li>
                         <li><a href="#">Other</a></li>
                     </ul>*/}
-                    </li>
+                    
                 </ul></li>
             </ul>
         </nav>

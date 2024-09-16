@@ -9,7 +9,7 @@ interface hashI {
 }
 
 class hasher implements hashI {
-    private salt = "0xD29F0608A8EB3A5771182ED5E83F4699 " // salt is 128 bit as represented in hex
+    private salt = "0xD29F0608A8EB3A5771182ED5E83F4699" // salt is 128 bit as represented in hex
     private cost = 10;
 
     private S = [ [ "d1310ba6", "98dfb5ac", "2ffd72db", "d01adfb7", "b8e1afed",

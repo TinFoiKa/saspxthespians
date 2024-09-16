@@ -1,4 +1,4 @@
-import { Suspense, lazy , useState , useEffect } from 'react'
+import { Suspense, lazy , } from 'react'
 import { Routes, Route } from "react-router-dom"
 import './App.css'
 
@@ -10,21 +10,13 @@ const Control = lazy(() => import("./pages/Control.tsx"))
 const Points = lazy(() => import("./forms/Points.tsx"))
 
 const App = () => {
-  const [perms, setPerms] = useState({bool: false})
 
-  useEffect(
-    () => {
-      
-      const sameHash = false
-      setPerms({bool: sameHash})
-    }
-  , [])
   return (
     <>
       <div className="container">
         <Routes>
             <Route path = "/login" element = {<></>} />
-            <Route path = "*" element = {<Navbar permissions = {perms.bool}/>}/>
+            <Route path = "*" element = {<Navbar/>}/>
         </Routes>
             
             <Suspense fallback = {<Loading />}>
