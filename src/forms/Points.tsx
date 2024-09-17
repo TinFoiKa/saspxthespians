@@ -4,8 +4,11 @@ import { databaseQuery, databaseWrite } from "../handlers/notion-handler"
 import ActivitySelection from "../components/Points/ActivitySelection"
 import TimeSelection from "../components/Points/TimeSelection"
 import { useCookies } from "react-cookie"
+import { useNavigate } from "react-router-dom"
 
 const Points = () => {
+    const navigate = useNavigate()
+
     const [info, setInfo] = useState({
         name: "",
         membertype: "",
@@ -42,27 +45,40 @@ const Points = () => {
     }
 
     const getPointsAmount = () => {
-        const computationType : string = childData.Qualifier.rich_text.length != 0 ? formInput.actLength : "Per Hour/Time"
+        const computationType : string = childData.Qualifier.rich_text.length == 0 ? formInput.actLength : "Per Hour/Time"
+
+        console.log(computationType)
 
         let finalNum
         if(computationType == "Per Hour/Time") {
             finalNum = formInput.qualified * childData["Per Hour/Time"].number
+            finalNum = finalNum.toFixed(1)
         } else {
             const comp = computationType == "Full Length" ? "Full Length" : "One Act" // just to block any errors coming into the ComputationType variable
             finalNum = childData[comp].number
         }
 
-        return finalNum
+        return +finalNum
     }
 
     const submitAll = async () => {
         const database = "83a82d337da54e3bbc4f7254b84c4fd3" // this is the database of the points middleMan
+
+        // setting up today's time
         const clock = new Date()
-        const today = clock.getFullYear() + "-" + clock.getMonth + "-" + clock.getDate
+        const raw = clock.getMonth()
+        const month = raw.toString().length != 2 ? '0' + (raw + 1) : raw + 1
+        const today = clock.getFullYear() + "-" + month + "-" + clock.getDate()
+
+        // parsing activityName
+        const blurb = JSON.parse(formInput.activityName)
+        const text = blurb['Name'].title[0].text.content
+
         const newProperties = {
             "properties": {
                 "Name": {
                     "title": [{
+                        "type": "text",
                         "text": {
                             "content": info.name
                         }
@@ -81,22 +97,32 @@ const Points = () => {
                 "Activity Date": {
                     "date": {
                         "start": formInput.date,
-                        "end": null
                     }
                 },
                 "Submission Date": {
                     "date": {
                         "start": today,
-                        "end": null
                     }
+                },
+                "Activity Type-Name": {
+                    "rich_text": [
+                        {
+                            "text": {
+                                "content": text + "-" + formInput.activityType + "-" + (childData.Qualifier.rich_text.length > 0 ? formInput.qualified + childData.Qualifier.rich_text[0].plain_text : "")
+                            }
+                        }
+                    ]
                 },
                 "Points Rewarded": {
                     "number": getPointsAmount()
                 }
             }
         }
+       
         const query = new databaseWrite(JSON.stringify(newProperties), database)
         const response = await query.execute()
+
+        navigate("success")
 
         console.log(response)
     }
@@ -150,13 +176,12 @@ const Points = () => {
 
 
     return ( 
-        <><div className="formbold-main-wrapper">
+        <>
+        <div className="formbold-main-wrapper">
             {/* Author: FormBold Team -->
             <!-- Learn More: https://formbold.com --> */}
             <div className="formbold-form-wrapper">
                     <p className="title">Points Form</p>
-                    
-                <form action="https://formbold.com/s/FORM_ID" method="POST">
 
                 <div className="formbold-input-wrapp formbold-mb-3">
                     <label htmlFor="firstname" className="formbold-form-label"> Name </label>
@@ -281,13 +306,28 @@ const Points = () => {
                 </div>
 
                 <button disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} className="formbold-btn" onClick = {submitAll}>Submit</button>
-                </form>
             </div>
             </div></>
     )
 }
 
-export default Points;
+const Success = () => {
+    const navigate = useNavigate()
+
+    return ( 
+        <div className="formbold-main-wrapper">
+            <div className="formbold-form-wrapper">
+                <p className="title">Submission Success!</p>
+                <div className = "button-group">
+                    <button className = "formbold-btn center green" onClick={() => {navigate("/points")}}>Submit Another </button>
+                    <button className = "formbold-btn center" onClick={() => {navigate("/")}}>Home </button>
+                </div>
+            </div>
+        </div>
+    )
+}
+
+export {Points, Success};
 
 // have:
 // Recursion, Search/sort, OOP (encapsulation), Data Manipulation, Validation, 2D array, API, working on HASH.

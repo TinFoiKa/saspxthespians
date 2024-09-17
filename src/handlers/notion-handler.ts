@@ -19,9 +19,9 @@ const shortHands = [
 ]
 class notionRequest {
     url = "https://sasthespians.aaronli69.workers.dev"
-    location: string | undefined = "ca6302f3f51f4553b3ae0be8a9b83036"
+    location: string
 
-    constructor (location?: string ) { 
+    constructor (location: string ) { 
         this.location = location
     }
 }
@@ -32,7 +32,7 @@ class databaseQuery extends notionRequest{
     logic: string
     commandQueue = new Queue<string>()
 
-    constructor(logic: string, location?: string) { // in terms of logic, ({prop} {quality}) {GATE} ({prop} {quality}) BINARY TREE
+    constructor(logic: string, location: string) { // in terms of logic, ({prop} {quality}) {GATE} ({prop} {quality}) BINARY TREE
         super(location);
         this.logic = logic
         console.log(this.dir)
@@ -166,12 +166,10 @@ class databaseQuery extends notionRequest{
             }
         }
     }
-    
 }
 
 class databaseWrite extends notionRequest {
     dir = "/pages"
-    database = ""
     method = "POST"
     pageObject: string
 
@@ -194,8 +192,8 @@ class databaseWrite extends notionRequest {
     }
 
     constructed(properties: string) {
-        const heading = '"parent": { "database_id": "'+ this.database + '" },'
-        return heading + properties.substring(1,properties.length-1) + "}"
+        const heading = '{"parent": { "database_id": "'+ this.location + '" },'
+        return heading + properties.substring(1, properties.length-2) + "}}"
     }
 }
 

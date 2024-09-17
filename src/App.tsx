@@ -7,7 +7,8 @@ import Navbar from "./components/Navbar"
 import Loading from "./components/Loading"
 import Login from "./forms/Login.tsx"
 const Control = lazy(() => import("./pages/Control.tsx"))
-const Points = lazy(() => import("./forms/Points.tsx"))
+const Points = lazy(() => import("./forms/Points.tsx").then(module => ({default: module.Points})))
+const Success = lazy(() => import("./forms/Points.tsx").then(module => ({default: module.Success})))
 
 const App = () => {
 
@@ -25,6 +26,7 @@ const App = () => {
                     <Route path = "/points" element = {<Points />} />
                     <Route path = "/officers" element = {<Control />} />
                     <Route path = "/login" element = {<Login />} />
+                    <Route path = "/points/success" element = {<Success />} />
                 </Routes>
             </Suspense>
         </div>

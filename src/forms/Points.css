@@ -194,6 +194,23 @@
     cursor: not-allowed
   }
 
+  .button-group {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    width: 40%;
+    flex-direction: column;
+    margin-left: 30%;
+  }
+
+  .center {
+    padding: 20px
+  }
+
+  .green {
+    background-color: #0c993b;
+  }
+
   .formbold-btn:hover {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
   }

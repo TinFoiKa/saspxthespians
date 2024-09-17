@@ -71,8 +71,8 @@ const TimeSelection = (props: {setFormInfo: React.Dispatch<SetStateAction<{
 
                     <select className="formbold-form-input" name="actLength" id="actLength" onChange = {updateParent} required>
                     <option value = "default">Choose one...</option>
-                    <option value="Performance">Full Length</option>
-                    <option value="Production">One Act</option>
+                    <option value="Full Length">Full Length</option>
+                    <option value="One Act">One Act</option>
                     </select>
                 </div>) // full length or half length
             return ret
