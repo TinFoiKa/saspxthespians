@@ -1,17 +1,21 @@
 import { ChangeEvent, useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { databaseQuery } from "../handlers/notion-handler"
+import { useCookies } from "react-cookie"
 import "./Login.css"
 import "./Points.css"
 
 const Login = () => {
     const navigate = useNavigate()
+    
+    const [cookie, setCookie, removeCookie] = useCookies(['auth'])
 
     const [info, setInfo] = useState({
         email: "",
         password: "",
         hash: "",
         perms: 0,
+        grade: "",
         store: false,
     })
 
@@ -114,11 +118,11 @@ const Login = () => {
                 default: 
                     permNumber = 0;
             }  
-            const allowed = {email: info.email, hash: info.hash, perms: permNumber}
+            const allowed = {email: info.email, hash: info.hash, perms: permNumber, grade: info.grade}
             
             // store user data in a cookie
-            document.cookie = "auth = " + JSON.stringify(allowed) + ";" + (info.store ? "expires = " + expiration : "")
-            navigate("../", {replace: true })
+            setCookie("auth", allowed)
+            navigate("../", { replace : true })
         }
     
 

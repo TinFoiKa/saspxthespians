@@ -1,19 +1,20 @@
 import { useNavigate } from "react-router-dom"
-
+import { useCookies } from "react-cookie"
 import "./Navbar.css"
 import { useEffect, useState } from "react"
 
 const Navbar = () => {
     const [perms, setPerms] = useState(0)
+    const [cookie, removeCookie] = useCookies(['auth'])
 
     const navigate = useNavigate()
 
     useEffect(() => {
         const updatePermissions = () => {
-            const cookie = document.cookie.split("=")[1]
+            const auth = cookie.auth
 
-            if (cookie){
-                const login = JSON.parse(document.cookie.split("=")[1])
+            if (auth){
+                const login = JSON.parse(auth)
                 setPerms(login.perms)
             }  
             else{
@@ -26,7 +27,7 @@ const Navbar = () => {
     }, [])
 
     const logout = () => {
-        document.cookie = "auth = "
+        removeCookie('auth')
     }
         
     return (

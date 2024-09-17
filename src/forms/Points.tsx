@@ -2,6 +2,7 @@ import "./Points.css"
 import { ChangeEvent, useEffect, useState } from "react"
 import { databaseQuery } from "../handlers/notion-handler"
 import ActivitySelection from "../components/ActivitySelection"
+import { useCookies } from "react-cookie"
 
 const Points = () => {
     const [info, setInfo] = useState({
@@ -10,6 +11,8 @@ const Points = () => {
         gradelevel: "",
         email: "",
     })
+
+    const [cookie, setCookie] = useCookies(['auth'])
 
     const [formInput, setFormInput] = useState({
         date: "",
@@ -31,7 +34,7 @@ const Points = () => {
     useEffect(() => {
         const initFetch = async () => {
             // break apart cookie
-            const auth = document.cookie.split("=")[1]
+            const auth = cookie.auth 
 
             const json = JSON.parse(auth)
 
@@ -43,7 +46,7 @@ const Points = () => {
         }
 
         initFetch()
-    }, [])
+    })
     
     const trackChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {id, value} = event.target
