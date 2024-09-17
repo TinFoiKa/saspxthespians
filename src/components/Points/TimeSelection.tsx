@@ -6,24 +6,28 @@ const TimeSelection = (props: {setFormInfo: React.Dispatch<SetStateAction<{
     submissionDate: string
     sendEmail: boolean,
     activityType: string,
-    activityName: string
+    activityName: string,
+    qualified: number,
+    actLength: string,
 }>>, formInfo: {
     date: string
     submissionDate: string
     sendEmail: boolean,
     activityType: string,
     activityName: string,
+    qualified: number,
+    actLength: string,
 }, data: {
     Name: {title: {plain_text: string}[]},
-    'Full Length': object
-    'One Act': object
-    'Per Hour/Time': object
+    'Full Length': {number : number}
+    'One Act': {number : number}
+    'Per Hour/Time': {number: number}
     Qualifier: {rich_text: {plain_text: string}[]}
 }, setData: React.Dispatch<SetStateAction<{
     Name: {title: {plain_text: string}[]},
-    'Full Length': object
-    'One Act': object
-    'Per Hour/Time': object
+    'Full Length': {number : number}
+    'One Act': {number : number}
+    'Per Hour/Time': {number: number}
     Qualifier: {rich_text: {plain_text: string}[]}}>>
 }) => {
 
@@ -52,19 +56,20 @@ const TimeSelection = (props: {setFormInfo: React.Dispatch<SetStateAction<{
 
             // per time vs full length v One Act
             const ret = isPerQual ? (<div className="formbold-mb-3"> 
-                <label htmlFor="number" className="formbold-form-label"> Amount of Time(s) Spent ({data.Qualifier.rich_text[0].plain_text}) </label>
+                <label htmlFor="qualified" className="formbold-form-label"> Amount of Time(s) Spent ({data.Qualifier.rich_text[0].plain_text}) </label>
                 <input
                 type="number"
                 name="number"
-                id="number"
+                id="qualified"
                 onChange = {updateParent}
                 placeholder="ex: 3"
                 className="formbold-form-input"
+                required
                 />
             </div>) : (<div className="formbold-mb-3">
                     <label className="formbold-form-label"> Length of Performance </label>
 
-                    <select className="formbold-form-input" name="activityType" id="activityType" onChange = {updateParent}>
+                    <select className="formbold-form-input" name="actLength" id="actLength" onChange = {updateParent} required>
                     <option value = "default">Choose one...</option>
                     <option value="Performance">Full Length</option>
                     <option value="Production">One Act</option>

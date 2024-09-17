@@ -188,6 +188,12 @@
     cursor: pointer;
     margin-top: 25px;
   }
+
+  .formbold-btn:disabled {
+    background-color: #6b64f1b2;
+    cursor: not-allowed
+  }
+
   .formbold-btn:hover {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.05);
   }

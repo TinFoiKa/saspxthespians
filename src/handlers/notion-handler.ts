@@ -170,7 +170,33 @@ class databaseQuery extends notionRequest{
 }
 
 class databaseWrite extends notionRequest {
-    dir = "/pages/ca6302f3f51f4553b3ae0be8a9b83036"
+    dir = "/pages"
+    database = ""
+    method = "POST"
+    pageObject: string
+
+    constructor(propertyString: string, database: string) {
+        super(database)
+        this.pageObject = propertyString
+    }
+
+    async execute() {
+        const body = this.constructed(this.pageObject)
+        console.log(body)
+        const response = await fetch(this.url + this.dir, {
+            method: this.method,
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: body
+        } )
+        return response
+    }
+
+    constructed(properties: string) {
+        const heading = '"parent": { "database_id": "'+ this.database + '" },'
+        return heading + properties.substring(1,properties.length-1) + "}"
+    }
 }
 
 export {databaseQuery, databaseWrite}

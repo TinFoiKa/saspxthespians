@@ -7,27 +7,31 @@ const ActivitySelection = (props: {type: string, formInfo: {
     submissionDate: string
     sendEmail: boolean,
     activityType: string,
-    activityName: string
+    activityName: string,
+    qualified: number,
+    actLength: string,
 }, setFormInfo: React.Dispatch<SetStateAction<{
-    date: string,
+    date: string
     submissionDate: string
     sendEmail: boolean,
     activityType: string,
-    activityName: string
+    activityName: string,
+    qualified: number,
+    actLength: string,
 }>>, setChildData: React.Dispatch<SetStateAction<{
     Name: {title: {plain_text: string}[]},
-    'Full Length': object
-    'One Act': object
-    'Per Hour/Time': object
+    'Full Length': {number : number}
+    'One Act': {number : number}
+    'Per Hour/Time': {number: number}
     Qualifier: {rich_text: {plain_text: string}[]}}>>
 }) => {
 
     const type = props.type
     const [pointsSheet, setPointsSheet] = useState([{properties: {
         Name: {title: [{plain_text: ""}]},
-        'Full Length': {},
-        'One Act': {},
-        'Per Hour/Time': {},
+        'Full Length': {number : 0},
+        'One Act': {number : 0},
+        'Per Hour/Time': {number: 0},
         Qualifier: {rich_text: [{plain_text: ""}]}
     }}])
 
@@ -50,7 +54,7 @@ const ActivitySelection = (props: {type: string, formInfo: {
         if(type != "") {
             getPointsSheet()
         }
-    }, [type])
+    }, [type, props])
 
     useEffect(() => {
         const updateParent = (event: ChangeEvent<HTMLSelectElement | HTMLInputElement>) => {
@@ -78,7 +82,7 @@ const ActivitySelection = (props: {type: string, formInfo: {
             <div className="formbold-mb-3">
                 <label className="formbold-form-label"> Activity Name </label>
 
-                <select className="formbold-form-input" name="activityName" id="activityName" onChange = {updateParent}>
+                <select className="formbold-form-input" name="activityName" id="activityName" onChange = {updateParent} required>
                     <option value = "default"> Choose One... </option>
                 {pointsSheet.map((data) => {
                     

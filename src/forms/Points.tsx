@@ -1,6 +1,6 @@
 import "./Points.css"
 import { ChangeEvent, useEffect, useState } from "react"
-import { databaseQuery } from "../handlers/notion-handler"
+import { databaseQuery, databaseWrite } from "../handlers/notion-handler"
 import ActivitySelection from "../components/Points/ActivitySelection"
 import TimeSelection from "../components/Points/TimeSelection"
 import { useCookies } from "react-cookie"
@@ -15,9 +15,9 @@ const Points = () => {
 
     const [childData, setChildData] = useState({
         Name: {title: [{plain_text: ""}]},
-        'Full Length': {},
-        'One Act': {},
-        'Per Hour/Time': {},
+        'Full Length': {number : 0},
+        'One Act': {number: 0},
+        'Per Hour/Time': {number: 0},
         Qualifier: {rich_text: [{plain_text: ""}]}
     })
 
@@ -28,7 +28,9 @@ const Points = () => {
         submissionDate: "",
         sendEmail: false,
         activityType: "",
-        activityName: ""
+        activityName: "",
+        qualified: 0,
+        actLength: ""
     })
 
     const getNameSplit = (index: number) => {
@@ -37,6 +39,66 @@ const Points = () => {
         } else {
             return info.name
         } 
+    }
+
+    const getPointsAmount = () => {
+        const computationType : string = childData.Qualifier.rich_text.length != 0 ? formInput.actLength : "Per Hour/Time"
+
+        let finalNum
+        if(computationType == "Per Hour/Time") {
+            finalNum = formInput.qualified * childData["Per Hour/Time"].number
+        } else {
+            const comp = computationType == "Full Length" ? "Full Length" : "One Act" // just to block any errors coming into the ComputationType variable
+            finalNum = childData[comp].number
+        }
+
+        return finalNum
+    }
+
+    const submitAll = async () => {
+        const database = "83a82d337da54e3bbc4f7254b84c4fd3" // this is the database of the points middleMan
+        const clock = new Date()
+        const today = clock.getFullYear() + "-" + clock.getMonth + "-" + clock.getDate
+        const newProperties = {
+            "properties": {
+                "Name": {
+                    "title": [{
+                        "text": {
+                            "content": info.name
+                        }
+                    }]
+                },
+                "Role": {
+                    "select": {
+                        "name": info.membertype
+                    }
+                },
+                "Status": {
+                    "select": {
+                        "name": "Pending"
+                    }
+                },
+                "Activity Date": {
+                    "date": {
+                        "start": formInput.date,
+                        "end": null
+                    }
+                },
+                "Submission Date": {
+                    "date": {
+                        "start": today,
+                        "end": null
+                    }
+                },
+                "Points Rewarded": {
+                    "number": getPointsAmount()
+                }
+            }
+        }
+        const query = new databaseWrite(JSON.stringify(newProperties), database)
+        const response = await query.execute()
+
+        console.log(response)
     }
 
     useEffect(() => {
@@ -151,13 +213,6 @@ const Points = () => {
                     </select>
                 </div>
 
-
-                <div className="formbold-mb-3">
-                    <label htmlFor="doa" className="formbold-form-label"> Activity Date </label>
-                    <input type="date" name="doa" id="doa" className="formbold-form-input" value = {formInput.date} onChange = {trackChange}/>
-                </div>
-
-               
                 <div className="formbold-mb-3">
                     <label htmlFor="email" className="formbold-form-label"> Email </label>
                     <input
@@ -172,9 +227,14 @@ const Points = () => {
                 </div>
 
                 <div className="formbold-mb-3">
+                    <label htmlFor="doa" className="formbold-form-label"> Activity Date </label>
+                    <input type="date" name="doa" id="date" className="formbold-form-input" value = {formInput.date} onChange = {trackChange}/>
+                </div>
+
+                <div className="formbold-mb-3">
                     <label className="formbold-form-label"> Activity Type </label>
 
-                    <select className="formbold-form-input" name="activityType" id="activityType" value = {formInput.activityType} onChange = {trackChange}>
+                    <select className="formbold-form-input" name="activityType" id="activityType" value = {formInput.activityType} onChange = {trackChange} required>
                     <option value = "default">Choose one...</option>
                     <option value="Performance">Performance</option>
                     <option value="Production">Production</option>
@@ -220,7 +280,7 @@ const Points = () => {
                     </label>
                 </div>
 
-                <button className="formbold-btn">Submit</button>
+                <button disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} className="formbold-btn" onClick = {submitAll}>Submit</button>
                 </form>
             </div>
             </div></>
