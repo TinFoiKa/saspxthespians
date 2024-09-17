@@ -10,6 +10,8 @@ const Login = () => {
     
     const [cookie, setCookie, removeCookie] = useCookies(['auth'])
 
+    const [errorMessage, setErrorMessage] = useState(String)
+
     const [info, setInfo] = useState({
         email: "",
         password: "",
@@ -82,7 +84,6 @@ const Login = () => {
     const authenticate = async () => {
 
         console.log(info.hash)
-        //! info.hash is not updating
 
         // database get
         const database = "b767e5f4b1b24a07b72684aae893453b"
@@ -125,6 +126,14 @@ const Login = () => {
             // store user data in a cookie
             setCookie("auth", allowed)
             navigate("../", { replace : true })
+        } else {
+            info.hash = ""
+            setErrorMessage("Username or Password Incorrect. Please Try Again")
+            const fields = document.getElementsByClassName("info")
+
+            for(let i = 0; i<fields.length; i++) {
+                (fields[i] as HTMLInputElement).classList.add("error")
+            }
         }
     
 
@@ -141,6 +150,7 @@ const Login = () => {
                     <input className = "info" id = "email" type="email" value = {info.email} onChange = {trackChange} required pattern=".*\.\w{2,}" placeholder="Email" />
                     <input className = "info" id = "password" type="password" value = {info.password} onChange = {trackChange} required placeholder="Password" />
                     
+                    <p className = "error text">{errorMessage}</p>
                     
                     <div className="formbold-checkbox-wrapper store">
                     <label htmlFor="store" className="formbold-checkbox-label">
@@ -171,7 +181,7 @@ const Login = () => {
                     Would you like us to store your Login Data?
                     </label>
                 </div>
-                    <button onClick={login} className="app-button">Login</button>
+                    <button disabled = {info.email == "" || info.password == ""} onClick={login} className="app-button formbold-btn ">Login</button>
                 </div>
             </div>
         </>

@@ -109,25 +109,33 @@ body{
 
 .store {
   position: absolute;
-    top: calc(40% + 12vh);
+    top: calc(40% + 13vh);
     left: 7vh
 }
 
 .app-button {
   text-decoration: none;
   background-color: rgb(49, 124, 209);
-  border-radius: 1vh;
+  border-radius: 1vh !important;
   left: 37%;
   color: #ffffff;
-  font-size: 2.4vh;
-  padding: 1.5vh 3vh;
+  font-size: 2.5vh !important;
+  padding: 1.5vh 3vh !important;
   position: absolute;
   bottom: 7.5vh;
   font-weight: 400;
-  
-  &:focus {
-    outline: none;
-  }
+}
+
+.error {
+    position:absolute;
+    color:red;
+    top: 60%;
+    left:15%;
+    &[className = "input"]{
+      border-bottom: 2px solid #fd00006e !important; 
+    }
+     
+
 }
 
 @keyframes button-press {
