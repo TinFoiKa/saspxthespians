@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 
 const Navbar = () => {
     const [perms, setPerms] = useState(0)
-    const [cookie, removeCookie] = useCookies(['auth'])
+    const [cookie, setCookie, removeCookie] = useCookies(['auth'])
 
     const navigate = useNavigate()
 
@@ -14,7 +14,7 @@ const Navbar = () => {
             const auth = cookie.auth
 
             if (auth){
-                const login = JSON.parse(auth)
+                const login = auth
                 setPerms(login.perms)
             }  
             else{
@@ -24,7 +24,7 @@ const Navbar = () => {
         }
         
         updatePermissions()
-    }, [])
+    }, [cookie.auth])
 
     const logout = () => {
         removeCookie('auth')
