@@ -8,6 +8,7 @@ import "./Points.css"
 const Login = () => {
     const navigate = useNavigate()
     
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [cookie, setCookie, removeCookie] = useCookies(['auth'])
 
     const [errorMessage, setErrorMessage] = useState(String)
@@ -22,10 +23,10 @@ const Login = () => {
     })
 
     const firstTrack = () => {
-        const inputs : HTMLInputElement[] = document.getElementsByClassName("info")
+        const infos = document.getElementsByClassName("info")
 
-        for (let i = 0; i < inputs.length; i++){
-            const input = inputs[i]
+        for (let i = 0; i < infos.length; i++){
+            const input = (infos[i] as HTMLInputElement)
             trackChange(input)
         }
     }
