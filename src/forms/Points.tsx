@@ -1,7 +1,8 @@
 import "./Points.css"
 import { ChangeEvent, useEffect, useState } from "react"
 import { databaseQuery } from "../handlers/notion-handler"
-import ActivitySelection from "../components/ActivitySelection"
+import ActivitySelection from "../components/Points/ActivitySelection"
+import TimeSelection from "../components/Points/TimeSelection"
 import { useCookies } from "react-cookie"
 
 const Points = () => {
@@ -12,19 +13,26 @@ const Points = () => {
         email: "",
     })
 
-    const [cookie, setCookie] = useCookies(['auth'])
+    const [childData, setChildData] = useState({
+        Name: {title: [{plain_text: ""}]},
+        'Full Length': {},
+        'One Act': {},
+        'Per Hour/Time': {},
+        Qualifier: {rich_text: [{plain_text: ""}]}
+    })
+
+    const [cookie] = useCookies(['auth'])
 
     const [formInput, setFormInput] = useState({
         date: "",
-        submissionDate: new Date(),
+        submissionDate: "",
         sendEmail: false,
         activityType: "",
-
+        activityName: ""
     })
 
     const getNameSplit = (index: number) => {
-        console.log(info.name)
-        if (info.name != undefined) {
+        if (info.name != "" || info.name != undefined) {
             return info.name.split(" ")[index]
         } else {
             return info.name
@@ -36,17 +44,38 @@ const Points = () => {
             // break apart cookie
             const auth = cookie.auth 
 
-            const json = JSON.parse(auth)
-
             const userdata = "b767e5f4b1b24a07b72684aae893453b"
-            const query = new databaseQuery("{Email is_"+ json.email +"}", userdata)
+            const query = new databaseQuery("{Email is_"+ auth.email +"}", userdata)
             const response = await (await query.execute()).json()
+            console.log(response)
+            const properties = response.results[0].properties
 
-            setInfo(response)
+            let member
+            switch(auth.perms){
+                case(1):
+                    member = "Apprentice"
+                    break;
+                case(2):
+                    member = "Member"
+                    break;
+                case(3):
+                    member = "Officer"
+                    break;
+                default:
+                    member = ""
+            }
+
+            const ret = {
+                name: properties['Name'].title[0].plain_text, 
+                membertype: member,
+                gradelevel: properties['Grade'].select.name,
+                email: properties['Email'].email
+            }
+            setInfo(ret)
         }
 
         initFetch()
-    })
+    }, [cookie.auth])
     
     const trackChange = (event: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const {id, value} = event.target
@@ -76,9 +105,11 @@ const Points = () => {
                         name="firstname"
                         disabled
                         value = {getNameSplit(0)}
+                        onChange = {trackChange}
                         id="firstname"
                         placeholder="First name"
                         className="formbold-form-input"
+                        readOnly
                     />
 
                     <input
@@ -87,8 +118,10 @@ const Points = () => {
                         disabled
                         id="lastname"
                         value = {getNameSplit(1)}
+                        onChange = {trackChange}
                         placeholder="Last name"
                         className="formbold-form-input"
+                        readOnly
                     />
                     </div>
                 </div>
@@ -100,16 +133,18 @@ const Points = () => {
                     name="age"
                     id="age"
                     value = {info.gradelevel}
+                    onChange = {trackChange}
                     placeholder="ex: Junior"
                     className="formbold-form-input"
+                    readOnly
                     />
                 </div>
 
                 <div className="formbold-mb-3">
                     <label className="formbold-form-label"> Member Type </label>
 
-                    <select className="formbold-form-input" name="occupation" id="occupation" value = {info.membertype}>
-                    <option value = "default">Choose one...</option>
+                    <select className="formbold-form-input" name="occupation" id="occupation" value = {info.membertype} onChange = {trackChange} unselectable = "on">
+                    <option value = "default">{info.membertype}</option>
                     <option value="Officer">Officer</option>
                     <option value="Member">Member</option>
                     <option value="Apprentice">Apprentice</option>
@@ -150,7 +185,9 @@ const Points = () => {
                     </select>
                 </div>
                 
-                <ActivitySelection type = {formInput.activityType}/>
+                <ActivitySelection type = {formInput.activityType} formInfo = {formInput} setChildData = {setChildData} setFormInfo = {setFormInput}/> {/* returns data of formInput.activityName */}
+
+                <TimeSelection data = {childData} setData = {setChildData} formInfo = {formInput} setFormInfo = {setFormInput}/>
 
                 <div className="formbold-checkbox-wrapper">
                     <label htmlFor="sendEmail" className="formbold-checkbox-label">
