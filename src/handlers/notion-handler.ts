@@ -1,5 +1,6 @@
 import OwnNode from "./node-tree"
 import Queue from "./queue-handle"
+import { types } from "./notion-types"
 
 const shortHands = [
     // type - checkbox  
@@ -17,6 +18,7 @@ const shortHands = [
     // type - people - checks first names
     ["needs", ', "people": ']
 ]
+
 class notionRequest {
     url = "https://sasthespians.aaronli69.workers.dev"
     location: string
@@ -66,6 +68,8 @@ class databaseQuery extends notionRequest{
         }
         
     }
+
+
 
     private hydrateGate(command: string, node: OwnNode | undefined): string{
         if (node != undefined) {
@@ -168,33 +172,47 @@ class databaseQuery extends notionRequest{
     }
 }
 
+interface propObject {
+    Name: string
+    Property: object
+}
+
 class databaseWrite extends notionRequest {
     dir = "/pages"
     method = "POST"
-    pageObject: string
+    pageObjectArray: propObject[]
 
-    constructor(propertyString: string, database: string) {
+    constructor(objectString: propObject[], database: string) {
         super(database)
-        this.pageObject = propertyString
+        this.pageObjectArray = objectString
     }
 
     async execute() {
-        const body = this.constructed(this.pageObject)
+        const body = {"parent": {"database_id": this.location}, ...this.constructed(this.pageObjectArray)}
         console.log(body)
         const response = await fetch(this.url + this.dir, {
             method: this.method,
             headers: {
                 "Content-Type": "application/json"
             },
-            body: body
+            body: JSON.stringify(body)
         } )
         return response
     }
 
-    constructed(properties: string) {
-        const heading = '{"parent": { "database_id": "'+ this.location + '" },'
-        return heading + properties.substring(1, properties.length-2) + "}}"
+    constructed(properties: propObject[]) {
+        //* properties are of the form [{Name: string, Property: string}]
+        const props = Object.assign({}, ...properties.map((prop) => {
+            return {[prop.Name]: prop.Property}
+        }))
+
+        const res = {
+            "properties" : props
+        }
+
+        console.log(res)
+        return res
     }
 }
 
-export {databaseQuery, databaseWrite}
+export { databaseQuery, databaseWrite, types }

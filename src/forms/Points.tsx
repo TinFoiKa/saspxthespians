@@ -1,12 +1,18 @@
 import "./Points.css"
 import { ChangeEvent, useEffect, useState } from "react"
-import { databaseQuery, databaseWrite } from "../handlers/notion-handler"
+import { databaseQuery, databaseWrite, types } from "../handlers/notion-handler"
 import ActivitySelection from "../components/Points/ActivitySelection"
 import TimeSelection from "../components/Points/TimeSelection"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
+import { Resend } from 'resend';
+import ConfirmationEmail from '../components/Email';
+
 
 const Points = () => {
+    
+    const resend = new Resend('re_123456789');
+
     const navigate = useNavigate()
 
     const [info, setInfo] = useState({
@@ -15,6 +21,8 @@ const Points = () => {
         gradelevel: "",
         email: "",
     })
+
+    const [finalPoints, setFinalPoints] = useState(Number)
 
     const [childData, setChildData] = useState({
         Name: {title: [{plain_text: ""}]},
@@ -58,6 +66,8 @@ const Points = () => {
             finalNum = childData[comp].number
         }
 
+        setFinalPoints(+finalNum)
+
         return +finalNum
     }
 
@@ -72,61 +82,38 @@ const Points = () => {
 
         // parsing activityName
         const blurb = JSON.parse(formInput.activityName)
-        const text = blurb['Name'].title[0].text.content
+        const activityName = blurb['Name'].title[0].text.content
 
-        const newProperties = {
-            "properties": {
-                "Name": {
-                    "title": [{
-                        "type": "text",
-                        "text": {
-                            "content": info.name
-                        }
-                    }]
-                },
-                "Role": {
-                    "select": {
-                        "name": info.membertype
-                    }
-                },
-                "Status": {
-                    "select": {
-                        "name": "Pending"
-                    }
-                },
-                "Activity Date": {
-                    "date": {
-                        "start": formInput.date,
-                    }
-                },
-                "Submission Date": {
-                    "date": {
-                        "start": today,
-                    }
-                },
-                "Activity Type-Name": {
-                    "rich_text": [
-                        {
-                            "text": {
-                                "content": text + "-" + formInput.activityType + "-" + (childData.Qualifier.rich_text.length > 0 ? formInput.qualified + childData.Qualifier.rich_text[0].plain_text : "")
-                            }
-                        }
-                    ]
-                },
-                "Points Rewarded": {
-                    "number": getPointsAmount()
-                }
-            }
-        }
+        // this is the object array to be sent to the corresponding database
+        const propObjects = [
+            {Name: "Name", Property: types.title(info.name)},
+            {Name: "Role", Property: types.select(info.membertype)},
+            {Name: "Status", Property: types.select("Pending")},
+            {Name: "Activity Date", Property: types.date(formInput.date)},
+            {Name: "Submission Date", Property: types.date(today)},
+            {Name: "Activity Type-Name", Property: types.text(activityName + "-" + formInput.activityType + "-" + (childData.Qualifier.rich_text.length > 0 ? formInput.qualified + childData.Qualifier.rich_text[0].plain_text : ""))},
+            {Name: "Points Rewarded", Property: {"number": getPointsAmount()}}
+        ] 
        
-        const query = new databaseWrite(JSON.stringify(newProperties), database)
+        const query = new databaseWrite(propObjects, database)
         const response = await query.execute()
+
+        // email
+        if(formInput.sendEmail) {
+            await resend.emails.send({
+                from: 'shanghai.thespians@gmail.com',
+                to: info.email,
+                subject: 'Successful Points Submission',
+                react: <ConfirmationEmail info = {{email: info.email, points: finalPoints, activity: formInput.activityType}} />,
+            })
+        }
 
         navigate("success")
 
         console.log(response)
     }
 
+    //* useEffect for initial query
     useEffect(() => {
         const initFetch = async () => {
             // break apart cookie

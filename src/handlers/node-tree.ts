@@ -27,7 +27,7 @@ class OwnNode {
             console.log("")
             return
         }
-        
+
         // const leftSubstring = string.match(/\{.+\} ([A-Z]{2}|[A-Z]{3}) \{.+\}/g)
         const reg : RegExp[] = [/\{.+\}/g, /\[.+\]/g, /\(.+\)/g]
         const roots : RegExpMatchArray = string.match(reg[level]) || ["null"] // this system will use 3 layers, checking from up to down/in to out. {[()]}]
@@ -36,7 +36,6 @@ class OwnNode {
         const firstExp = roots[0].length
         const left = roots[0]
 
-        
         if(roots.length > 1) { // in case of middle operation,
             const right = roots[1]
             const oper = string.substring(firstExp, firstExp + 2).trimEnd()

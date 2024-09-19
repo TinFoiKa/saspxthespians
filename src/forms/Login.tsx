@@ -47,6 +47,7 @@ const Login = () => {
             ...prevInfo,
             [id] : modification
         }))
+
         return true
     }
 
@@ -91,8 +92,6 @@ const Login = () => {
         //const query = new databaseQuery("{Email is_" + info.email + "}", database)
         const query = new databaseQuery("{Email is_" + info.email + "}", database)
         const data = await (await query.execute()).json()
-
-        
 
         console.log(data)
         // manually do the filter here until the notion API issue is resolved
