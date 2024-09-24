@@ -4,19 +4,21 @@ import "../../forms/Points.css"
 const TimeSelection = (props: {setFormInfo: React.Dispatch<SetStateAction<{
     date: string,
     submissionDate: string
-    sendEmail: boolean,
+    sendEmail: string,
     activityType: string,
     activityName: string,
     qualified: number,
     actLength: string,
+    details: string,
 }>>, formInfo: {
     date: string
     submissionDate: string
-    sendEmail: boolean,
+    sendEmail: string,
     activityType: string,
     activityName: string,
     qualified: number,
     actLength: string,
+    details: string,
 }, data: {
     Name: {title: {plain_text: string}[]},
     'Full Length': {number : number}

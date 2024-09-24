@@ -39,6 +39,7 @@ const Navbar = () => {
         <input type="checkbox" id="drop" />
             <ul className="menu">
                 <li><a href="#" onClick = {() => navigate("")}>Home</a></li>
+                <li><a href="#">Shows</a></li>
                 {perms > 0 ? <li>
                     <label htmlFor="drop-1" className="toggle">Members + Apprentices</label>
                     <a>Members + Apprentices</a>
@@ -56,8 +57,8 @@ const Navbar = () => {
                 <a href="#">For Officers</a>
                 <input type="checkbox" id="drop-2"/>
                 <ul>
-                    <li><a href="#">Documentation</a></li>
-                    <li><a href="#">Notion</a></li>
+                    <li><a href="https://www.notion.so/Documentation-8f8905f737cb473b9084d59177616922">Documentation</a></li>
+                    <li><a href="https://www.notion.so/Thespians-Officer-Hub-45b2d5fc4a8c4234bfc42bffa6500139">Notion</a></li>
                     <li><a href="#/officers" >Control Panel</a>
                     </li>
                 </ul>

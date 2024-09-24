@@ -1,5 +1,4 @@
 import OwnNode from "./node-tree"
-import Queue from "./queue-handle"
 import { types } from "./notion-types"
 
 const shortHands = [
@@ -32,8 +31,7 @@ class databaseQuery extends notionRequest{
     dir = "/databases/"+ this.location + "/query"
     method = "POST"
     logic: string
-    commandQueue = new Queue<string>()
-
+    
     constructor(logic: string, location: string) { // in terms of logic, ({prop} {quality}) {GATE} ({prop} {quality}) BINARY TREE
         super(location);
         this.logic = logic

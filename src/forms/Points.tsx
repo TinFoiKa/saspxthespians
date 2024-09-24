@@ -5,13 +5,10 @@ import ActivitySelection from "../components/Points/ActivitySelection"
 import TimeSelection from "../components/Points/TimeSelection"
 import { useCookies } from "react-cookie"
 import { useNavigate } from "react-router-dom"
-import { Resend } from 'resend';
 import ConfirmationEmail from '../components/Email';
 
 
 const Points = () => {
-    
-    const resend = new Resend('re_123456789');
 
     const navigate = useNavigate()
 
@@ -37,11 +34,12 @@ const Points = () => {
     const [formInput, setFormInput] = useState({
         date: "",
         submissionDate: "",
-        sendEmail: false,
+        sendEmail: "",
         activityType: "",
         activityName: "",
         qualified: 0,
-        actLength: ""
+        actLength: "",
+        details: ""
     })
 
     const getNameSplit = (index: number) => {
@@ -92,19 +90,22 @@ const Points = () => {
             {Name: "Activity Date", Property: types.date(formInput.date)},
             {Name: "Submission Date", Property: types.date(today)},
             {Name: "Activity Type-Name", Property: types.text(activityName + "-" + formInput.activityType + "-" + (childData.Qualifier.rich_text.length > 0 ? formInput.qualified + childData.Qualifier.rich_text[0].plain_text : ""))},
-            {Name: "Points Rewarded", Property: {"number": getPointsAmount()}}
+            {Name: "Points Rewarded", Property: {"number": getPointsAmount()}},
+            {Name: "Details", Property: types.text(formInput.details)}
         ] 
        
         const query = new databaseWrite(propObjects, database)
         const response = await query.execute()
 
+        console.log(formInput.sendEmail)
         // email
         if(formInput.sendEmail) {
-            await resend.emails.send({
-                from: 'shanghai.thespians@gmail.com',
-                to: info.email,
-                subject: 'Successful Points Submission',
-                react: <ConfirmationEmail info = {{email: info.email, points: finalPoints, activity: formInput.activityType}} />,
+            await fetch("https://sasthespians.aaronli69.workers.dev/email", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({component: (<ConfirmationEmail info = {{email: info.email, points: finalPoints, activity: formInput.activityType}}/>)})
             })
         }
 
@@ -244,6 +245,20 @@ const Points = () => {
                 </div>
 
                 <div className="formbold-mb-3">
+                    <label htmlFor="age" className="formbold-form-label"> Name of Activity </label>
+                    <input
+                    type="text"
+                    name="age"
+                    id="age"
+                    value = {formInput.details}
+                    onChange = {trackChange}
+                    placeholder="ex: The Tempest"
+                    className="formbold-form-input"
+                    readOnly
+                    />
+                </div>
+
+                <div className="formbold-mb-3">
                     <label className="formbold-form-label"> Activity Type </label>
 
                     <select className="formbold-form-input" name="activityType" id="activityType" value = {formInput.activityType} onChange = {trackChange} required>
@@ -268,7 +283,7 @@ const Points = () => {
                         type="checkbox"
                         id="sendEmail"
                         className="formbold-input-checkbox"
-                        
+                        onChange={trackChange}
                         />
                         <div className="formbold-checkbox-inner">
                         <span className="formbold-opacity-0">

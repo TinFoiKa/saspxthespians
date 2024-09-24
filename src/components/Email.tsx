@@ -6,13 +6,13 @@ import { Resend } from "resend"
 const ConfirmationEmail = (props: {info: {email: string, points: number, activity: string}}) => {
     const { info } = props
 
-    const resend = new Resend('re_123456789')
+    const resend = new Resend('re_2EgioH2B_KtDBk8vTa8nc7KfHuVYTAfjf')
 
     const [points, setPoints] = useState()
 
     const sendDevEmail = async () => {
         await resend.emails.send({
-            from: info.email,
+            from: "onboarding@resend.dev",
             to: 'aaronli69@outlook.com',
             subject: 'WHAT THE FUOHEAUHOQJPW',
             text: "WHAAAAAAAAAAAA"
