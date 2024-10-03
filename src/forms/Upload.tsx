@@ -1,6 +1,19 @@
 import "./Upload.css"
+import { ChangeEvent, useState } from "react"
 
 const Upload = () => {
+    const [form, setForm] = useState({
+        image: "",
+        
+    })
+
+    const trackChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+        const {id, value} = e.target
+        setForm((prevState) => ({
+            ...prevState,
+            [id] : value
+        }))
+    }
 
     return (<div className="formbold-main-wrapper upload">
         <div className="w-full">
@@ -22,6 +35,18 @@ const Upload = () => {
                   placeholder="Title here (be creative)"
                   className="formbold-form-input"
                 />
+              </div>
+
+              <div className="formbold-mb-5">
+                <label htmlFor="image" className="formbold-form-label"> Cover Image </label>
+                <input type = "file"
+                    id = "image"
+                    name = "image"
+                    accept = "image/*"
+                    onChange = {trackChange}
+                />
+                <img src={form.image} />
+
               </div>
       
               <div className="formbold-mb-5">
