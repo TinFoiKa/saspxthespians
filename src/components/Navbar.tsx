@@ -5,6 +5,7 @@ import { useEffect, useState } from "react"
 
 const Navbar = () => {
     const [perms, setPerms] = useState(0)
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [cookie, setCookie, removeCookie] = useCookies(['auth'])
 
     const navigate = useNavigate()
@@ -47,7 +48,7 @@ const Navbar = () => {
                     <ul>
                         <li><a href="#">Roster</a></li>
                         <li><a href="#/points" onClick = {() => navigate("points")}>Points</a></li>
-                        <li><a href="">Other Forms</a></li>
+                        <li><a href="#/upload/writing" onClick = {() => navigate("upload/writing")}>Your Writing</a></li>
                     </ul> 
 
                 </li>: <></>}
@@ -59,8 +60,8 @@ const Navbar = () => {
                 <ul>
                     <li><a href="https://www.notion.so/Documentation-8f8905f737cb473b9084d59177616922">Documentation</a></li>
                     <li><a href="https://www.notion.so/Thespians-Officer-Hub-45b2d5fc4a8c4234bfc42bffa6500139">Notion</a></li>
-                    <li><a href="#/officers" >Control Panel</a>
-                    </li>
+                    <li><a href="#/officers" >Control Panel</a></li>
+                    <li><a href="#/officers/report-attendance">Attendance</a></li>
                 </ul>
                 </li> : <></>}
                 <li><a href="#">Feedback</a></li>

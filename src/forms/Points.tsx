@@ -169,9 +169,10 @@ const Points = () => {
             {/* Author: FormBold Team -->
             <!-- Learn More: https://formbold.com --> */}
             <div className="formbold-form-wrapper">
-                    <p className="title">Points Form</p>
-
-                <div className="formbold-input-wrapp formbold-mb-3">
+                <div className = "formbold-form-header">
+                    <h3>Points Form</h3>
+                    </div>
+                <div className="formbold-input-wrap formbold-mb-3">
                     <label htmlFor="firstname" className="formbold-form-label"> Name </label>
 
                     <div>
@@ -276,7 +277,7 @@ const Points = () => {
 
                 <TimeSelection data = {childData} setData = {setChildData} formInfo = {formInput} setFormInfo = {setFormInput}/>
 
-                <div className="formbold-checkbox-wrapper">
+                <div className="formbold-checkbox-wrapper formbold-mb-3">
                     <label htmlFor="sendEmail" className="formbold-checkbox-label">
                     <div className="formbold-relative">
                         <input
@@ -307,8 +308,9 @@ const Points = () => {
                     </label>
                 </div>
 
-                <button disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} className="formbold-btn" onClick = {submitAll}>Submit</button>
-            </div>
+                <button className = "formbold-btn" disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} onClick = {submitAll}>Submit</button>
+                </div>
+            
             </div></>
     )
 }
