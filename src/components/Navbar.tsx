@@ -3,6 +3,9 @@ import { useCookies } from "react-cookie"
 import "./Navbar.css"
 import { useEffect, useState } from "react"
 
+import menu from  "../assets/menu"
+import settings from "../assets/settings"
+
 const Navbar = () => {
     const [perms, setPerms] = useState(0)
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -30,16 +33,24 @@ const Navbar = () => {
     const logout = () => {
         removeCookie('auth')
     }
+
+    const moveHandle = (location: string) => {
+        const largeDrop = document.getElementById("drop");
+        (largeDrop as HTMLInputElement).checked = false;
+        console.log((largeDrop as HTMLInputElement).checked)
+        navigate(location)
+        
+    }
         
     return (
         <>
             <nav>
-        <div id="logo" className = "logo" onClick = {() => navigate("")} >Your Logo here</div>
+        <div id="logo" className = "logo" onClick = {() => moveHandle("")} >Your Logo here</div>
 
-        <label htmlFor="drop" className="toggle">Menu</label>
+        <label htmlFor="drop" className="toggle">{menu()}</label>
         <input type="checkbox" id="drop" />
             <ul className="menu">
-                <li><a href="#" onClick = {() => navigate("")}>Home</a></li>
+                <li><a href="#" onClick = {() => moveHandle("")}>Home</a></li>
                 <li><a href="#">Shows</a></li>
                 {perms > 0 ? <li>
                     <label htmlFor="drop-1" className="toggle">Members + Apprentices</label>
@@ -47,8 +58,8 @@ const Navbar = () => {
                     <input type="checkbox" id="drop-1"/>
                     <ul>
                         <li><a href="#">Roster</a></li>
-                        <li><a href="#/points" onClick = {() => navigate("points")}>Points</a></li>
-                        <li><a href="#/upload/writing" onClick = {() => navigate("upload/writing")}>Your Writing</a></li>
+                        <li><a href="#/points" onClick = {() => moveHandle("points")}>Points</a></li>
+                        <li><a href="#/upload/writing" onClick = {() => moveHandle("upload/writing")}>Your Writing</a></li>
                     </ul> 
 
                 </li>: <></>}
@@ -70,10 +81,10 @@ const Navbar = () => {
                 {perms > 0 ? <></> : <li><a href = "#/login">Login</a></li>}
 
                 <li>
-                <a href="#"><img src = "../assets/settings.svg"></img></a>
+                <a href="#">{settings()}</a>
                 <input type="checkbox" id="drop-3"/>
                 <ul>
-                    <li><a href="#/settings" onClick = {() => navigate("settings")}>Settings</a></li>
+                    <li><a href="#/settings" onClick = {() => moveHandle("settings")}>Settings</a></li>
                     {perms > 0 ? <li><a href="" onClick = {logout}>Logout</a></li>: <></>}
                     {/*<label htmlFor="drop-3" className="toggle">Tutorials +</label>
                     <a href="#">Tutorials</a>         

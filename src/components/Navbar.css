@@ -192,6 +192,7 @@ li > a:only-child:after { content: ''; }
 		font-size:17px;
 		text-decoration:none;
 		border:none;
+		
 	}
 
 	.toggle:hover {
@@ -221,6 +222,12 @@ li > a:only-child:after { content: ''; }
 	nav a:hover,
  	nav ul ul ul a {
 		background-color: #000000;
+	}
+	
+	[id^=drop]
+	ul li a :focus
+	{
+		display: none;
 	}
   
 	nav ul li ul li .toggle,
