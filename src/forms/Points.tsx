@@ -246,11 +246,11 @@ const Points = () => {
                 </div>
 
                 <div className="formbold-mb-3">
-                    <label htmlFor="age" className="formbold-form-label"> Name of Activity </label>
+                    <label htmlFor="details" className="formbold-form-label"> Name of Activity </label>
                     <input
                     type="text"
-                    name="age"
-                    id="age"
+                    name="details"
+                    id="details"
                     value = {formInput.details}
                     onChange = {trackChange}
                     placeholder="ex: The Tempest"

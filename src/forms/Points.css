@@ -201,3 +201,6 @@
   .formbold-w-45 {
     width: 45%;
   }
+
+  @media all and (max-width : 768px) {
+  }
