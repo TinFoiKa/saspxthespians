@@ -180,9 +180,42 @@ class databaseWrite extends notionRequest {
     method = "POST"
     pageObjectArray: propObject[]
 
+    // is a pair when editing row, however a normal array when entering values.
     constructor(objectString: propObject[], database: string) {
         super(database)
         this.pageObjectArray = objectString
+    }
+
+    async editRow() : Promise<Response> {
+        this.method = "POST"
+        const search = this.pageObjectArray[0]
+        const property = this.pageObjectArray[1]
+        console.log(search.Property)
+        const page = new databaseQuery("{" + search.Name + " is_" + search.Property.email + "}", this.location)
+        const json = await (await (page.execute())).json()
+        
+        const id = json ? json.results[0].id : ""
+
+        console.log(id)
+
+        // catch empty response
+        if (id != "" && id != undefined) {
+            const body = {"properties": {
+                [property.Name] : property.Property
+            }}
+
+            const response = await fetch(this.url + this.dir + "/" + id, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify(body)
+            })
+
+            return response
+        } else {
+            return new Response("no response")
+        }
     }
 
     async execute() {

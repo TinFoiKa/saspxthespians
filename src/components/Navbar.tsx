@@ -73,7 +73,7 @@ const Navbar = () => {
                 <a href="#"><img src = "../assets/settings.svg"></img></a>
                 <input type="checkbox" id="drop-3"/>
                 <ul>
-                    <li><a href="#">Settings</a></li>
+                    <li><a href="#/settings" onClick = {() => navigate("settings")}>Settings</a></li>
                     {perms > 0 ? <li><a href="" onClick = {logout}>Logout</a></li>: <></>}
                     {/*<label htmlFor="drop-3" className="toggle">Tutorials +</label>
                     <a href="#">Tutorials</a>         

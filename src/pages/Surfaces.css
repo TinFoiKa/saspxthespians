@@ -1,0 +1,44 @@
+.editWrapper {
+    padding: 5%;
+}
+
+.editContent {
+    background: white;
+    width: 75%;
+    padding: 40px;
+    margin-left: 12.5%;
+    border-radius: 10px
+}
+.sectionHead {
+    margin-bottom: 20px;
+    font-size: 20px;
+    font-weight: 600;
+    color: black
+}
+
+.continued {
+    border-bottom: black solid 0.5px;
+}
+
+.input {
+    position: relative;
+    width: 60%;
+    margin-left: 20px;
+    padding: 13px 22px;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+    background: #ffffff;
+    font-weight: 500;
+    font-size: 16px;
+    color: #536387;
+    outline: none;
+    resize: none;
+    margin-bottom: 20px;
+}
+
+.button {
+    margin-left: 10px;
+    width: fit-content;
+    border-radius: 5px;
+    border: 1px solid #dde3ec;
+}

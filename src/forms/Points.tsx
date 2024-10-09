@@ -308,7 +308,7 @@ const Points = () => {
                     </label>
                 </div>
 
-                <button className = "formbold-btn" disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} onClick = {submitAll}>Submit</button>
+                <button id = "points" className = "formbold-btn" disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} onClick = {submitAll}>Submit</button>
                 </div>
             
             </div></>

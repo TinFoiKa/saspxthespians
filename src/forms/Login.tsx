@@ -145,7 +145,7 @@ const Login = () => {
                 <div id="app" onLoad={firstTrack}>
                 <div className="app-view" >  
                     <header className="app-header">
-                    <image></image>
+                    <p>Login</p>
                     </header>
                     <input className = "info" id = "email" type="email" value = {info.email} onChange = {trackChange} required pattern=".*\.\w{2,}" placeholder="Email" />
                     <input className = "info" id = "password" type="password" value = {info.password} onChange = {trackChange} required placeholder="Password" />

@@ -97,19 +97,28 @@ body{
   }
   
   &[type="email"] {
-    top: 40%;
+    top: 35%;
   }
   
   &[type="password"] {
-    top: calc(40% + 7.5vh);
+    top: calc(35% + 7.5vh);
   }
 
   
 }
 
+.formbold-checkbox-label {
+  display: flex;
+  cursor: pointer;
+  user-select: none;
+  font-size: 10px;
+  line-height: 24px;
+  color: #536387;
+}
+
 .store {
   position: absolute;
-    top: calc(40% + 13vh);
+    top: calc(35% + 13vh);
     left: 7vh
 }
 

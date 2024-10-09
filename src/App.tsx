@@ -10,6 +10,7 @@ const Control = lazy(() => import("./pages/Control.tsx"))
 const Points = lazy(() => import("./forms/Points.tsx").then(module => ({default: module.Points})))
 const Success = lazy(() => import("./forms/Points.tsx").then(module => ({default: module.Success})))
 const Upload = lazy(() => import("./forms/Upload.tsx"))
+const Settings = lazy(() => import("./pages/Settings.tsx"))
 
 const App = () => {
 
@@ -29,6 +30,7 @@ const App = () => {
                     <Route path = "/officers" element = {<Control />} />
                     <Route path = "/login" element = {<Login />} />
                     <Route path = "/upload/writing" element = {<Upload />}/>
+                    <Route path = "/settings" element = {<Settings />} />
                 </Routes>
             </Suspense>
         </div>

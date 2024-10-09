@@ -1,6 +1,7 @@
 import React, { lazy, useState } from "react"
 import Loading from "../components/Loading.js"
 console.log("entered control")
+import "./Surfaces.css"
 
 //! we should probably delete "user id" property
 
