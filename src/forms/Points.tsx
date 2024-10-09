@@ -255,7 +255,6 @@ const Points = () => {
                     onChange = {trackChange}
                     placeholder="ex: The Tempest"
                     className="formbold-form-input"
-                    readOnly
                     />
                 </div>
 
