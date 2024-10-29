@@ -19,7 +19,7 @@ const shortHands = [
 ]
 
 class notionRequest {
-    url = "https://sasthespians.aaronli69.workers.dev"
+    url = "https://api.notion.com/v1"
     location: string
 
     constructor (location: string ) { 
@@ -172,7 +172,8 @@ class databaseQuery extends notionRequest{
 
 interface propObject {
     Name: string
-    Property: object
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    Property: any
 }
 
 class databaseWrite extends notionRequest {
