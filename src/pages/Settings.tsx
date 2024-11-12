@@ -29,7 +29,7 @@ const Settings = () => {
     }
     
     const confirm = async () => {
-        const userdb = "b767e5f4b1b24a07b72684aae893453b"
+        const userdb = "Users"
         const success = document.getElementById("Success")
         if(success) success.innerHTML = "Loading..."
 

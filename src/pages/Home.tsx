@@ -25,7 +25,7 @@ const Home = () => {
         () => {
             console.log("based")
             const getPageData = async () => {
-                const websitePhotos = "ca6302f3f51f4553b3ae0be8a9b83036"
+                const websitePhotos = "Media"
                 const query = new databaseQuery("{Displayed checked}", websitePhotos)
                 const response = await (await query.execute()).json()
                 console.log(response)

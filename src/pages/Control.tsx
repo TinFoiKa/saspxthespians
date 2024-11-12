@@ -1,7 +1,9 @@
-import React, { lazy, useState } from "react"
+import React, { ChangeEvent, KeyboardEvent, lazy, ReactEventHandler, useState } from "react"
 import Loading from "../components/Loading.js"
 console.log("entered control")
 import "./Surfaces.css"
+import { databaseQuery } from "../handlers/notion-handler.js"
+import { P } from "@sighmir/blowfish"
 
 //! we should probably delete "user id" property
 
@@ -11,6 +13,10 @@ const Control = () => {
     
     const [matrix, setMatrix] = useState({array: []})
     const [insertType, setInsertType] = useState({})
+    const [info, setInfo] = useState({
+        request: "",
+        sendLocation: ""
+    })
 
     /*useEffect(() => { 
         const handleLoad = async () => {
@@ -53,6 +59,49 @@ const Control = () => {
         // returns position as int
         return i + 1
     } 
+
+    const directQueryRequest = async () => {
+        const ret = document.getElementById("queryRet")
+    
+        // for example an input can be {[Role is_Officer] OR [(Role is_Apprentice) AND (Considered is_true)]} AND {Points >100}
+        const request = info.request
+        const location = info.sendLocation
+        
+        const query = new databaseQuery(request, location)
+        const response = await query.execute()
+        const data = await response.json()
+
+        if (ret)
+        if(response.status == 400) {
+             ret.innerHTML = "<p>Database query error. Recheck query for syntax, or report the issue.</p> <a href = 'https://www.notion.so/Documentation-8f8905f737cb473b9084d59177616922'>Syntax Help</a>"
+        } else if (response.status == 200) {
+            ret.innerHTML = toTable(data)
+        }
+    }
+
+    const toTable = (data: object) => {
+        return ""
+    }
+
+    const trackChange = (event: ChangeEvent<HTMLInputElement> | HTMLInputElement) => {
+        console.log(typeof event)
+        const {id, value} = (event as ChangeEvent<HTMLInputElement>).target ? (event as ChangeEvent<HTMLInputElement>).target : {id: 0, value: false}
+
+        // check the case that it is a checkbox
+        let checked
+        if ((event as HTMLInputElement).type == "checkbox") {
+            checked = (event as HTMLInputElement).checked
+        }
+        
+        const modification = checked || value
+        // modify only changed values
+        setInfo((prevInfo) => ({
+            ...prevInfo,
+            [id] : modification
+        }))
+
+        return true
+    }
 
     // recursive sorting algorithm
     const quickSort = (array: [{part: any, index: number}], low: number, high: number) => {
@@ -110,6 +159,12 @@ const Control = () => {
             matrixSort(e.target.id, true)
         }
     }
+
+    const enterCheck = (e: KeyboardEvent<HTMLInputElement>) => {
+        if (e.key == "Enter") {
+            directQueryRequest()
+        }
+    }
  
 
    /* const callback = (eventData) => {
@@ -153,6 +208,15 @@ const Control = () => {
                     })}
                 </tbody>
             </table>
+
+            <input 
+                type = "text"
+                id = "request"
+                placeholder = "Request string; [enter] to run"
+                value = {info.request}
+                onChange = {trackChange}
+                onKeyDown = {enterCheck}
+            />
         </>
     )
 }

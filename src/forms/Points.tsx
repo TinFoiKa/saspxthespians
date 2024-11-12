@@ -70,7 +70,7 @@ const Points = () => {
     }
 
     const submitAll = async () => {
-        const database = "83a82d337da54e3bbc4f7254b84c4fd3" // this is the database of the points middleMan
+        const database = "Points" // this is the database of the notion points
 
         // setting up today's time
         const clock = new Date()
@@ -93,13 +93,15 @@ const Points = () => {
             {Name: "Points Rewarded", Property: {"number": getPointsAmount()}},
             {Name: "Details", Property: types.text(formInput.details)}
         ] 
+        
+        console.log(propObjects)
        
         const query = new databaseWrite(propObjects, database)
         const response = await query.execute()
 
         console.log(formInput.sendEmail)
         // email
-        if(formInput.sendEmail) {
+        if(formInput.sendEmail == "on") {
             await fetch("https://sasthespians.aaronli69.workers.dev/email", {
                 method: "POST",
                 headers: {
@@ -109,8 +111,13 @@ const Points = () => {
             })
         }
 
-        navigate("success")
-
+        if (response.status == 400) {
+            const error = document.getElementById("error")
+            if (error) error.innerText = "Error in points submission. May be a server error. Please contact officers if problem persists."
+        } else {
+            navigate("success")
+        }
+    
         console.log(response)
     }
 
@@ -120,7 +127,7 @@ const Points = () => {
             // break apart cookie
             const auth = cookie.auth 
 
-            const userdata = "b767e5f4b1b24a07b72684aae893453b"
+            const userdata = "Users"
             const query = new databaseQuery("{Email is_"+ auth.email +"}", userdata)
             const response = await (await query.execute()).json()
             console.log(response)
@@ -309,6 +316,10 @@ const Points = () => {
                 </div>
 
                 <button id = "points" className = "formbold-btn" disabled = {formInput.date == "" || formInput.activityType == "" || formInput.activityName == "" || (formInput.actLength == "" && formInput.qualified == 0)} onClick = {submitAll}>Submit</button>
+                </div>
+                
+                <div id = "error">
+
                 </div>
             
             </div></>

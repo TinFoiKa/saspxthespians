@@ -88,7 +88,7 @@ const Login = () => {
         console.log(info.hash)
 
         // database get
-        const database = "b767e5f4b1b24a07b72684aae893453b"
+        const database = "Users"
         //const query = new databaseQuery("{Email is_" + info.email + "}", database)
         const query = new databaseQuery("{Email is_" + info.email + "}", database)
         const data = await (await query.execute()).json()

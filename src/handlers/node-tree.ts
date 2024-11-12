@@ -21,7 +21,7 @@ class OwnNode {
 
     // given tree string is an unbalanced array - cannot do simple binary tree calculations'
     private group(string: string, level: number, node: OwnNode) : void {
-        // final case - level is greater than the () level
+        // final case - level is greater than the () level. Only 3 layers of logic are allowed. Any more is ridiculous.
         if (level > 2) {
             node.val = string
             console.log("")
@@ -50,15 +50,6 @@ class OwnNode {
         }
         
     }
-
-   /* static converted(array: string[]) {
-        if (array == null || array.length == 0) {
-            return undefined
-        }
-
-        return OwnNode.build(array, 0, array.length -1)
-    }*/
-
 }
 
 export default OwnNode

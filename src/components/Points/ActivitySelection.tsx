@@ -41,7 +41,7 @@ const ActivitySelection = (props: {type: string, formInfo: {
 
     useEffect(() => {
         const getPointsSheet = async () => {
-            const points = "4b878fc3319a44d2b0ed1fe6295e298d"
+            const points = "Reference"
             const query = new databaseQuery("{Category of_" + type + "}", points)
             const data = await ( await query.execute() ).json()
 

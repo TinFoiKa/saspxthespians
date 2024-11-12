@@ -1,5 +1,5 @@
 import OwnNode from "./node-tree"
-import { types } from "./notion-types"
+import { types, databases } from "./notion-types"
 
 const shortHands = [
     // type - checkbox  
@@ -19,11 +19,16 @@ const shortHands = [
 ]
 
 class notionRequest {
-    url = "https://api.notion.com/v1"
+    url = "https://sasthespians.aaronli69.workers.dev"
     location: string
 
     constructor (location: string ) { 
-        this.location = location
+        this.location = "error"
+        for(let i = 0; i < databases.length; i++) {
+            if (databases[i][0] == location) {
+                this.location = databases[i][1]
+            }
+        }
     }
 }
 
@@ -52,7 +57,7 @@ class databaseQuery extends notionRequest{
     }
 
     // translation of logic to tree, then object
-    requestObj() {
+    private requestObj() {
         // group objects into {[()]}
         const tree = new OwnNode("")
         tree.converted(this.logic)
@@ -232,7 +237,7 @@ class databaseWrite extends notionRequest {
         return response
     }
 
-    constructed(properties: propObject[]) {
+    private constructed(properties: propObject[]) {
         //* properties are of the form [{Name: string, Property: string}]
         const props = Object.assign({}, ...properties.map((prop) => {
             return {[prop.Name]: prop.Property}
