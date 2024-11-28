@@ -41,7 +41,7 @@ const Home = () => {
         if(photos != undefined){
             // dir = results[0].properties["Files & Media"].files[0]
             // 0 is PR, 1 is webmaster, 2 is historian, 3 is VP, 4 is Bgnd, 5 is Spring Musical, 6 is Pres, 7 is fall play, 
-            const file = photos.results[tag].properties["Files & Media"].files[0]
+            const file = (photos as object).results[tag].properties["Files & Media"].files[0]
             try {
                 return file.file.url
             } catch {

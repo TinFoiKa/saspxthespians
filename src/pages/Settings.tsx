@@ -1,11 +1,12 @@
-import { ChangeEvent, useState } from  "react"
+import { ChangeEvent, useState, ReactNode } from  "react"
 import "./Surfaces.css"
 import { databaseWrite } from "../handlers/notion-handler";
 import { types } from "../handlers/notion-handler";
+import pfp from "../assets/pfp"
 import { useCookies } from "react-cookie";
 
 const Settings = () => {
-    const [changes, setChanges] = useState({pass: "", prev: ""});
+    const [changes, setChanges] = useState({pass: "", prev: "", photo: "", username: "", sheetname: "", phone: ""});
     const [cookies] = useCookies(["auth"]);
 
     const trackChange = (event: ChangeEvent<HTMLInputElement>) => {
@@ -28,10 +29,29 @@ const Settings = () => {
         });
     }
     
+    const getPhotoLink = () => {
+        // get the photo from the user data
+        return ""
+    }
+
+    const getInsert = () => {
+        const url = getPhotoLink()
+        
+        const ret : ReactNode = url != "" ?
+            <img src = {url} className = "images"></img>
+            : 
+            pfp()
+
+        return ret
+    }
+    
     const confirm = async () => {
         const userdb = "Users"
-        const success = document.getElementById("Success")
-        if(success) success.innerHTML = "Loading..."
+        const success = document.getElementsByClassName("Success")
+        for (let i = 0; i < success.length; i++){
+            if(success[i]) success[i].innerHTML = "Loading..."
+        }
+        
 
         const hash = await sha256(changes.pass)
         
@@ -45,49 +65,122 @@ const Settings = () => {
             console.log("error: invalid inputs")
         } else {
             
-            if (success) success.innerHTML = "Successful Password Change!"
+            for (let i = 0; i < success.length; i++){
+                if(success[i].id == "pass") success[i].innerHTML = "Successful Password Change!"
+            }
         }
 
 
     }
 
+    const request = async () => {
+
+    }
+
     return (
+        <>
         <div className = "editWrapper">
             <div className = "editContent">
                 <div className = "section continued">
-                <div className =  "sectionHead">
-                    Password
+                    <div className="sectionHead">
+                        Profile Picture
+                    </div>
+                    <div className="editing">
+                        <label htmlFor = "photo" className = "inTwo">
+                            <div className = "roundedPhoto">
+                                {getInsert()}
+                            </div>
+                            <input
+                                id = "photo"
+                                type = "file"
+                                name = "photo"
+                                value = {changes.photo}
+                                onChange={trackChange}
+                            />
+                        </label>
+                    </div>
+                    <button disabled = {changes.photo == ""} className = "button underPhoto" onClick= {() => confirm()}> Update </button>
                 </div>
-                <div className = "editing">
-                    Old Password
-                    <label htmlFor = "prev"> 
-                        <input className = "input"
-                                id = "prev"
-                                type = "password"
-                                name = "prev"
-                                value = {changes.prev}
-                                onChange = {trackChange}
-                                placeholder = "previous password..."
-                        />
-                    </label>
-                </div>
-                <div className = "editing">
-                    <label htmlFor = "password">
-                        New password
-                    <input
-                        className = "input"
-                        id = "pass"
-                        type = "password" 
-                        name = "password"
-                        value = {changes.pass}
-                        onChange = {trackChange}
-                        placeholder = "new password..."/>
-                    </label>
+                
+                <div className = "section continued">
+                    <div className =  "sectionHead">
+                        Password
+                    </div>
+                    <div className = "editing">
+                        Old Password
+                        <label htmlFor = "prev"> 
+                            <input className = "input"
+                                    id = "prev"
+                                    type = "password"
+                                    name = "prev"
+                                    value = {changes.prev}
+                                    onChange = {trackChange}
+                                    placeholder = "previous password..."
+                            />
+                        </label>
+                    </div>
+                    <div className = "editing">
+                        <label htmlFor = "password">
+                            New password
+                        <input
+                            className = "input"
+                            id = "pass"
+                            type = "password" 
+                            name = "password"
+                            value = {changes.pass}
+                            onChange = {trackChange}
+                            placeholder = "new password..."/>
+                        </label>
 
-                    <button disabled = {changes.pass == "" && changes.prev == ""} className = "button" onClick= {() => confirm()}> Update </button>
+                        <button disabled = {changes.pass == "" && changes.prev == ""} className = "button" onClick= {() => confirm()}> Update </button>
+                    </div>
+
+                    {/* Self-decided username, Name change requests, preferred pronouns, phone number, profile picture changing */}
+                    <div className = "success" id = "pass"></div>
                 </div>
-                <div id = "Success"></div>
+                <div className = "section continued">
+                    <div className = "sectionHead">
+                        Username
+                    </div>
+                    <div className="editing">
+                        New Username
+                        <label htmlFor = "username"> 
+                            <input className = "input"
+                                    id = "username"
+                                    type = "text"
+                                    name = "username"
+                                    value = {changes.username}
+                                    onChange = {trackChange}
+                                    placeholder = "new display name..."
+                            />
+                        </label>
+
+                        <button disabled = {changes.username == ""} className = "button" onClick= {() => confirm()}> Update </button>
+                    </div>
                 </div>
+
+                <div className = "section continued">
+                    <div className = "sectionHead">
+                        Points Sheet Name
+                    </div>
+                    <div className="editing">
+                        Request New Name
+                        <label htmlFor = "sheetname"> 
+                            <input className = "input"
+                                    id = "sheetname"
+                                    type = "text"
+                                    name = "sheetname"
+                                    value = {changes.sheetname}
+                                    onChange = {trackChange}
+                                    placeholder = "new on-sheet name..."
+                            />
+                        </label>
+
+                        <button disabled = {changes.sheetname == ""} className = "button" onClick= {() => request()}> Request </button>
+                    </div>
+                </div>
+
+
                 <div className = "section">idk what i'm doing pls help. very quickly you seem to care for your account. 
                     That is a good thing. Now, another good thing is the importance of a stable mindset in programming. 
                     Now, that is not very well supported when spotify keeps recommending me fleet foxes. They are good. 
@@ -107,6 +200,7 @@ const Settings = () => {
                     equation is simple in 96 dimensions". I would like to stay in 3 spatial dimensions thank you very much.</div>
             </div>
         </div>
+        </>
     )
 
 }

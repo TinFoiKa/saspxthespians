@@ -1,4 +1,4 @@
-import "./Upload.css"
+import "./Writing.css"
 import { ChangeEvent, useState } from "react"
 
 const Upload = () => {

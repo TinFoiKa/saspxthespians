@@ -33,7 +33,7 @@ class notionRequest {
 }
 
 class databaseQuery extends notionRequest{
-    dir = "/databases/"+ this.location + "/query"
+    dir = "notion/databases/"+ this.location + "/query"
     method = "POST"
     logic: string
     

@@ -9,8 +9,9 @@ import Login from "./forms/Login.tsx"
 const Control = lazy(() => import("./pages/Control.tsx"))
 const Points = lazy(() => import("./forms/Points.tsx").then(module => ({default: module.Points})))
 const Success = lazy(() => import("./forms/Points.tsx").then(module => ({default: module.Success})))
-const Upload = lazy(() => import("./forms/Upload.tsx"))
+const Writing = lazy(() => import("./forms/Writing.tsx"))
 const Settings = lazy(() => import("./pages/Settings.tsx"))
+const VidUpload = lazy(() => import("./forms/VidUpload.tsx"))
 
 const App = () => {
 
@@ -29,7 +30,8 @@ const App = () => {
                     <Route path = "/points/success" element = {<Success />} />
                     <Route path = "/officers" element = {<Control />} />
                     <Route path = "/login" element = {<Login />} />
-                    <Route path = "/upload/writing" element = {<Upload />}/>
+                    <Route path = "/upload/writing" element = {<Writing />}/>
+                    <Route path = "/upload/video" element = {<VidUpload />}/>
                     <Route path = "/settings" element = {<Settings />} />
                 </Routes>
             </Suspense>

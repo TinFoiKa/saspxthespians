@@ -71,6 +71,7 @@ const Navbar = () => {
                 <ul>
                     <li><a href="https://www.notion.so/Documentation-8f8905f737cb473b9084d59177616922">Documentation</a></li>
                     <li><a href="https://www.notion.so/Thespians-Officer-Hub-45b2d5fc4a8c4234bfc42bffa6500139">Notion</a></li>
+                    <li><a href = "#/upload/video">Upload Videos</a></li>
                     <li><a href="#/officers" >Control Panel</a></li>
                     <li><a href="#/officers/report-attendance">Attendance</a></li>
                 </ul>

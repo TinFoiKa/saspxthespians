@@ -93,8 +93,7 @@ const Points = () => {
             {Name: "Points Rewarded", Property: {"number": getPointsAmount()}},
             {Name: "Details", Property: types.text(formInput.details)}
         ] 
-        
-        console.log(propObjects)
+    
        
         const query = new databaseWrite(propObjects, database)
         const response = await query.execute()
