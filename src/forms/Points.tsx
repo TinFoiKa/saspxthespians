@@ -70,6 +70,9 @@ const Points = () => {
     }
 
     const submitAll = async () => {
+        const submission = document.getElementById("points")
+        if (submission) submission.setAttribute("disabled", "true")
+            
         const database = "Points" // this is the database of the notion points
 
         // setting up today's time
