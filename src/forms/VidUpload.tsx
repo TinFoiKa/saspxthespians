@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { upload } from "../handlers/youtube-handler";
+import "../pages/Surfaces.css"
 
 const VidUpload = () => {
     const [file, setFile] = useState({
@@ -14,34 +15,54 @@ const VidUpload = () => {
             ...prevState,
             [id] : value
         }))
+        if (e.target.id == "url") {
+            const vid = document.getElementById("videoFile");
+            const media = e.target.value
+            if(vid) {
+                vid.setAttribute("src", media)
+                vid.style.display = "block";
+            } 
+        }
     }
 
     const pushToYoutube = async () => {
         const video = new upload(file.url, file.title, file.description)
 
-        await video.send()
+        const res = await video.send()
+        if (res.ok) {
+            console.log("error")
+        }
     }
 
     return (
-        <div className = "vidWrapper">
-            <div className = "vidContent">
-                <div className = "vidHeading">
+        <div className = "editWrapper">
+            <div className = "editContent">
+                <div className = "sectionHead continued">
                     Upload a Video
                 </div>
-                <div className = "upload">
+                <div className = "sectionHead">
                     <label htmlFor = "title">
-                        Title
+                        Title 
+                        <div>
                         <input 
+                            className="negatived input "
                             id = "title"
                             type = "text"
                             name = "title"
                             value = {file.title}
-                            placeholder="title"
+                            placeholder="Show Name, Date, etc."
                             onChange={updateUpload}
                         />
+                        </div>
                     </label>
+                </div>
+                <div className = "sectionHead">
                     <label htmlFor = "url" className = "videoArea">
-                        Video
+                        Video 
+                        <div>
+                        <video width="320" height="240" controls id = "videoFile">
+                            <source src="" type="video/mp4"/>
+                        </video> <br/>
                         <input 
                             id = "url"
                             type = "file"
@@ -50,16 +71,23 @@ const VidUpload = () => {
                             accept = ".mp4; .mov"
                             onChange={updateUpload}
                         />
+                        </div>
+                        
                     </label>
+                </div>
+                <div className = "sectionHead">
                     <label htmlFor = "description">
-                        description
+                        Description
+                        <div>
                         <textarea 
+                            className = "negatived input"
                             id = "description"
                             rows = {5}
                             name = "description"
                             value = {file.description}
                             onChange={updateUpload}
                         />
+                        </div>
                     </label>
 
                     <button className="" onClick={pushToYoutube}>Upload</button>

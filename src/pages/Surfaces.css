@@ -38,6 +38,8 @@
     height: 100px;
 }
 
+
+
 .input {
     position: relative;
     width: 60%;
@@ -52,6 +54,9 @@
     outline: none;
     resize: none;
     margin-bottom: 20px;
+}
+.negatived {
+    margin-left: 0px;
 }
 
 .button {

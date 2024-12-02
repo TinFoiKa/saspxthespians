@@ -9,7 +9,7 @@ class youtubeRequest {
 }
 
 class upload extends youtubeRequest {
-    dir = "youtube/youtube.upload"
+    dir = "/youtube/youtube.upload"
     videoFilePath: string
     title: string
     description: string
