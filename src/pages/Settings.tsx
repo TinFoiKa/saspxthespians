@@ -181,7 +181,7 @@ const Settings = () => {
                 </div>
 
 
-                <div className = "section">idk what i'm doing pls help. very quickly you seem to care for your account. 
+                {/*<div className = "section">idk what i'm doing pls help. very quickly you seem to care for your account. 
                     That is a good thing. Now, another good thing is the importance of a stable mindset in programming. 
                     Now, that is not very well supported when spotify keeps recommending me fleet foxes. They are good. 
                     However. Did you also know that in the process of denoting a lot of very "indefinite" things, 
@@ -197,8 +197,9 @@ const Settings = () => {
                     Guy was pretty funny. His first draft wave function was correct, but it was ugly, and so as all people do
                     he likey not so much. but now what u get is this absolute beauty of a dePsi/det = Ham(Psi). Even the time
                     dependent version is beautiful. except the second order partial differential. That's just uncool. "this
-                    equation is simple in 96 dimensions". I would like to stay in 3 spatial dimensions thank you very much.</div>
-            </div>
+                    equation is simple in 96 dimensions". I would like to stay in 3 spatial dimensions thank you very much.</div> */
+                }
+                </div>
         </div>
         </>
     )

@@ -26,11 +26,18 @@ const VidUpload = () => {
     }
 
     const pushToYoutube = async () => {
-        const video = new upload(file.url, file.title, file.description)
-
-        const res = await video.send()
-        if (res.ok) {
+        const error = document.getElementById("error")
+        if (error) error.innerText = "Upload Error. Make sure you have filled out the necessary fields."
+        if(file.url == "" || file.title == "" || file.description == ""){
             console.log("error")
+        } else {
+            const video = new upload(file.url, file.title, file.description)
+
+            const res = await video.send()
+            console.log(res)
+            if (res.ok) {
+                console.log("error")
+            }
         }
     }
 
@@ -91,6 +98,7 @@ const VidUpload = () => {
                     </label>
 
                     <button className="" onClick={pushToYoutube}>Upload</button>
+                    <div id = "error" className = "specError sectionHead"></div>
                 </div>
             </div>
         </div>
