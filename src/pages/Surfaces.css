@@ -77,3 +77,77 @@
     margin-top: 10px;
     margin-bottom: 10px;
 }
+
+.videoPreview {
+    margin-bottom: 1rem;
+    display: flex;
+    justify-content: center;
+}
+
+.videoPreview video {
+    max-width: 100%;
+    border-radius: 8px;
+    background-color: #000;
+}
+
+.mainHeader {
+    font-size: 1.5rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #e5e7eb;
+}
+
+.fileUploadBox {
+    border: 2px dashed #dde3ec;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    background: #f8fafc;
+    margin: 1rem 0;
+}
+
+.fileUploadBox:hover {
+    border-color: #94a3b8;
+    background: #f1f5f9;
+}
+
+.uploadContent {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.uploadIcon {
+    width: 2.5rem;
+    height: 2.5rem;
+    color: #64748b;
+    margin-bottom: 0.5rem;
+}
+
+.uploadText {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.primaryText {
+    color: #2563eb;
+    font-weight: 500;
+}
+
+.secondaryText {
+    color: #64748b;
+}
+
+.fileTypes {
+    color: #94a3b8;
+    font-size: 0.875rem;
+}
+
+.hiddenInput {
+    display: none;
+}

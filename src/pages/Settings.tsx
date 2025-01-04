@@ -9,6 +9,12 @@ const Settings = () => {
     const [changes, setChanges] = useState({pass: "", prev: "", photo: "", username: "", sheetname: "", phone: ""});
     const [cookies] = useCookies(["auth"]);
 
+    const formLocations = new Map<string, string>()
+    formLocations.set("password", "Users");
+    formLocations.set("photo", "Users");
+    formLocations.set("sheetName", "Requests");
+    formLocations.set("phone", "Users");
+
     const trackChange = (event: ChangeEvent<HTMLInputElement>) => {
         const {id, value} = event.target
 

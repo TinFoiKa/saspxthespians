@@ -1,21 +1,22 @@
-import React, { ChangeEvent, KeyboardEvent, lazy, ReactEventHandler, useState } from "react"
-import Loading from "../components/Loading.js"
+import { ChangeEvent, KeyboardEvent, useState } from "react"
+// import Loading from "../components/Loading.js"
 console.log("entered control")
 import "./Surfaces.css"
 import { databaseQuery } from "../handlers/notion-handler.js"
-import { P } from "@sighmir/blowfish"
+// import { P } from "@sighmir/blowfish"
 
 //! we should probably delete "user id" property
 
-const Panel = lazy(() => import("../components/Panel.js"))
+// const Panel = lazy(() => import("../components/Panel.js"))
 
 const Control = () => {
     
-    const [matrix, setMatrix] = useState({array: []})
-    const [insertType, setInsertType] = useState({})
+    // const [matrix, setMatrix] = useState({array: []})
+    // const [insertType, setInsertType] = useState({})
     const [info, setInfo] = useState({
         request: "",
-        sendLocation: ""
+        sendLocation: "",
+        query: ""
     })
 
     /*useEffect(() => { 
@@ -35,7 +36,7 @@ const Control = () => {
     }, [])*/
 
     // handling constituent partitions.
-    const partition = (array: [{part: any, index: number}], low: number, high: number) => {
+    /*const partition = (array: [{part: any, index: number}], low: number, high: number) => {
         const pivot = array[high].part
         // if partition on right, is position of previous pivot. if on left, inconsequential (? It works in my head)
         let i = low - 1 
@@ -81,7 +82,7 @@ const Control = () => {
 
     const toTable = (data: object) => {
         return ""
-    }
+    }*/
 
     const trackChange = (event: ChangeEvent<HTMLInputElement> | HTMLInputElement) => {
         console.log(typeof event)
@@ -101,7 +102,7 @@ const Control = () => {
         }))
 
         return true
-    }
+    }/*
 
     // recursive sorting algorithm
     const quickSort = (array: [{part: any, index: number}], low: number, high: number) => {
@@ -171,11 +172,9 @@ const Control = () => {
         setInsertType(eventData)
     }*/
 
-    console.log("kms", matrix)
-
     return (
         <>
-            <div hidden id = "" className = "overlay">
+            {/*<div hidden id = "" className = "overlay">
                 <Panel />
             </div>
             {//<input type = "button" onClick = {(event) => dbInsert(insertType)} value = "Input "/>
@@ -217,6 +216,32 @@ const Control = () => {
                 onChange = {trackChange}
                 onKeyDown = {enterCheck}
             />
+        </>
+            */}
+            <div className = "editWrapper">
+                <div className="editContent">
+                    <div className = "sectionHead continued">
+                        Control Panel
+                    </div>
+                    <div className = "sectionHead">
+                        <label htmlFor="query">
+                            Send Query
+                            <div>
+                            <input
+                                className="negatived input"
+                                id = "query"
+                                type = "text"
+                                name = "query"
+                                value = {info.query}
+                                onChange={trackChange}
+                                placeholder="e.g. {[Role is_Officer] OR [(Role is_Apprentice) AND (Considered is_true)]} AND {Points >100} Check Documentation"
+                            />
+                            </div>
+                        </label>
+                    </div>
+                    
+                </div>
+            </div>
         </>
     )
 }
