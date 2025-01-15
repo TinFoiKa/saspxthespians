@@ -83,18 +83,16 @@ const Home = () => {
     <div className="content">
         <h2 className="content-head is-center">Shows and Dates</h2>
 
-        <div className="pure-flex">
-            <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
-
+        <div className="pure-flex" style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
+            <div className="show-box l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
                 <h3 className="content-subhead">
                     <i className="fa fa-rocket"></i>
                     Fall Play
                 </h3>
-
                 {getInsert(7)} 
-
             </div>
-            <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+
+            <div className="show-box l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
                 <h3 className="content-subhead">
                     <i className="fa fa-mobile"></i>
                     Spring Musical
@@ -114,7 +112,7 @@ const Home = () => {
                     <i className="fa fa-rocket"></i>
                     President
                 </h3>
-                {getInsert(6)} 
+                <p>{getInsert(6)}</p>
             </div>
             <div className="grid"> 
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
@@ -122,14 +120,15 @@ const Home = () => {
                     <i className="fa fa-mobile"></i>
                     Vice President
                 </h3>
-                {getInsert(3)} 
+                <p>{getInsert(3)} </p>
             </div>
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
                 <h3 className="content-subhead">
                     <i className="fa fa-mobile"></i>
                     Historian
                 </h3>
-                {getInsert(2)} 
+                <p>{getInsert(2)}</p>
+                
             </div></div>
             <div className="grid"> 
             <div className="l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
