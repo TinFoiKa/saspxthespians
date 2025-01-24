@@ -1,22 +1,12 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-case-declarations */
 import OwnNode from "./node-tree"
 import { types, databases } from "./notion-types"
 
-const shortHands = [
-    // type - checkbox  
-    ["checked", ', "checkbox": {"equals": true }'],
-    ["!checked", ', "checkbox": { "equals": false }'],
-    // type - dates
-    [">", ', "date": { "after": '],
-    ["<", ', "date": { "before": '],
-    // type - numbers
-    ["<", ', "number": { "less_than": '],
-    ["<=", ', "number": { "less_than_or_equal_to": '],
-    [">=", ", number: {greater_than_or_equal_to: "],
-    [">", ", number: { greater_than: "],
-    ["=", ", number: { equals: "],
-    // type - people - checks first names
-    ["needs", ', "people": ']
-]
+const shortHands = ["sel", "chk", "txt"]
+const dateRegex = /^([<>]=?)?(\d{4}\/\d{2}\/\d{2})$/
+const numberRegex = /^([<>]=?)?\d+$/
+const emailRegex = /^email:(.+@.+\..+)$/
 
 class notionRequest {
     url = "https://sasthespians.aaronli69.workers.dev"
@@ -40,12 +30,12 @@ class databaseQuery extends notionRequest{
     constructor(logic: string, location: string) { // in terms of logic, ({prop} {quality}) {GATE} ({prop} {quality}) BINARY TREE
         super(location);
         this.logic = logic
-        console.log(this.dir)
+        // console.log(this.dir)
     }
 
     async execute(): Promise<Response> {
         const body = this.requestObj()
-        console.log(body)
+        // console.log("Final request body:", body)
         const response = await fetch(this.url + this.dir, {
             method: this.method,
             headers: {
@@ -58,109 +48,164 @@ class databaseQuery extends notionRequest{
 
     // translation of logic to tree, then object
     private requestObj() {
+        console.log("Starting requestObj with logic:", this.logic);
+        
         // group objects into {[()]}
         const tree = new OwnNode("")
         tree.converted(this.logic)
-
+        
+        console.log("Tree after conversion:", tree);
+        
         const node = tree ? tree.val : "0"
+        console.log("Node value:", node);
 
         if (node != "0") {
-            return this.hydrateGate('{"filter": {', tree) + "}"
+            const result = this.hydrateGate('{"filter": {', tree) + "}}";
+            console.log("Final result:", result);
+            return result;
         } else {
+            console.log("No object created - node was 0");
             return "no object"
         }
-        
     }
 
 
 
-    private hydrateGate(command: string, node: OwnNode | undefined): string{
+    private hydrateGate(command: string, node: OwnNode | undefined, level: number = 0): string {
         if (node != undefined) {
-            switch (node.val) { // this is for the first layer of gate
+            /*console.log("\n=== HYDRATE GATE ===");
+            console.log("Input node at level", level, ":", {
+                value: node.val,
+                command: command,
+                hasLeft: !!node.l,
+                hasRight: !!node.r
+            });*/
+
+            switch (node.val) {
                 case ("OR"):
-                    command += "or: ["
-                    return this.hydrateGate(command, node.l) + this.hydrateGate(command, node.r) + "]" // recurse if gate
+                    // For nested OR operations, wrap in an object
+                    const orCommand = level > 0 ? '{"or": [' : '"or": [';
+                    const orParts = []
+                    if (node.l) orParts.push(this.hydrateGate("", node.l, level + 1));
+                    if (node.r) orParts.push(this.hydrateGate("", node.r, level + 1));
+                    const orResult = command + orCommand + orParts.join(',') + "]" + (level > 0 ? "}" : "");
+                    //console.log("OR result at level", level, ":", orResult);
+                    return orResult;
+
                 case ("AND"):
-                    command += "and: ["
-                    return this.hydrateGate(command, node.l) + this.hydrateGate(command, node.r) + "]"
-                default: // not a gate; because of tree structure, props and values are at the bottom
-                    return this.hydrateItems(command, node) // the value would be "(props assignment)"
+                    // For nested AND operations, wrap in an object
+                    const andCommand = level > 0 ? '{"and": [' : '"and": [';
+                    const andParts = []
+                    if (node.l) andParts.push(this.hydrateGate("", node.l, level + 1));
+                    if (node.r) andParts.push(this.hydrateGate("", node.r, level + 1));
+                    const andResult = command + andCommand + andParts.filter(part => part !== "").join(',') + "]" + (level > 0 ? "}" : "");
+                    // console.log("AND result at level", level, ":", andResult);
+                    return andResult;
+
+                default:
+                    // console.log("Processing leaf node at level", level, ":", node.val);
+                    let value = node.val.trim();
+                    if ((value.startsWith('[') && value.endsWith(']')) ||
+                        (value.startsWith('{') && value.endsWith('}')) ||
+                        (value.startsWith('(') && value.endsWith(')'))) {
+                        // console.log("Found wrapped expression, unwrapping:", value);
+                        value = value.slice(1, -1).trim();
+                        return this.hydrateGate(command, new OwnNode(value), level);
+                    }
+                    
+                    if (value.includes(' OR ') || value.includes(' AND ')) {
+                        // console.log("Found nested operation in:", value);
+                        return this.hydrateGate(command, new OwnNode(value), level);
+                    }
+                    
+                    return this.hydrateItems(command, node);
             }
         } else {
-            return "erroneous input"
+            console.log("undefined node at level", level);
+            return "erroneous input";
         }
     }
 
     private hydrateItems(command: string, node: OwnNode | undefined): string {
+        console.log("\n=== HYDRATE ITEMS ===");
+        console.log("Input:", {
+            nodeValue: node?.val,
+            command: command
+        });
+
         if (node == undefined || node.val == 'null') {
-            console.log("bad ending nodes")
-            return ""
-        }
-        // deepest-layer items (props assignment)
-        const trimmed = node.val.trim().substring(1, node.val.length - 1) // cleans (), allows for space split.
-        let split : string[] = []
-        const match = trimmed.match(/'.+'/g)
-        if (match) {
-            split = [match[0].substring(1, match[0].length-2), trimmed.substring(match[0].length, trimmed.length-1)]
-        } else {
-            split = trimmed.split(" ")
+            // console.log("bad ending nodes");
+            return "";
         }
 
-        let string = command + '"property": "' + split[0] + '"'
-
-        const quality = split[1]
-
-        //* dates, numbers (dates in 2001-9-11 format)
-        if(quality.match(/^[<>=]+(?:19|20)\d\d-(?:0[1-9]|1[0-2])-(?:0[1-9]|[12][0-9]|3[01])$/g)) { // date | range 2 -3
-            string += this.dateNumResult([2,3], quality)
-        } else if (quality.match(/^[<>=]+(\d+)$/g)) { // number | range 4-8
-            string += this.dateNumResult([4,8], quality)
-        } else {
-    
-        //* checkbox
-        switch(quality) {
-            case ("checked"):
-                string += shortHands[0][1]
-                break;
-            case ("!checked"):
-                string += shortHands[1][1]
-                break;
-        }
-
-        if (quality.match(/of_(\w)+/g)){
-            const displace = 3
-            const category = quality.substring(displace)
-            string += ', "select": { "equals": "' + category + '"}' 
-        }
-
-        //* email matching
-        if(quality.match(/^is_[\w-.]+@([\w-]+\.)+[\w-]{2,4}$/g)) {
-            const displace = 3
-            const email = quality.substring(displace)
-            string += ', "email": { "equals": "' + email + '"}'
-        } else {
-
-        //* text matching
-        if(quality.match(/is_(\w)+/g)) {
-            const displace = 3
-            const text = quality.substring(displace)
-            string += ', "rich_text": { "equals": "' + text + '"}'
-        } else if (quality.match(/contains_(\w)+/g)) {
-            const displace = 9
-            const text = quality.substring(displace)
-            string += ', "rich_text": { "contains": "' + text + '"}'
-        }
-        }
-
-        //* tags matching
-        if (quality.match(/has_tag_(\w)+/g) != null) { //! has_tag_ is 8 characters IMPORTANT
-            const displace = 8
-            const tag = quality.substring(displace)
-            string += ', "contains": ' + tag 
+        // Remove ALL types of brackets and trim
+        let value = node.val.trim();
+        let originalValue = value;
+        
+        // First, check if we have a nested OR/AND before removing brackets
+        if (value.includes(' OR ') || value.includes(' AND ')) {
+            console.log("Found nested operation before unwrapping:", value);
+            return this.hydrateGate(command, new OwnNode(value));
         }
         
+        // Then handle bracket removal
+        while ((value.startsWith('[') && value.endsWith(']')) ||
+               (value.startsWith('{') && value.endsWith('}')) ||
+               (value.startsWith('(') && value.endsWith(')'))) {
+            value = value.slice(1, -1).trim();
+            // console.log("Unwrapped from:", originalValue, "to:", value);
+            originalValue = value;
         }
-        return string + "}"
+
+        // Split on first space only
+        const firstSpaceIndex = value.indexOf(' ');
+        if (firstSpaceIndex === -1) {
+            // console.log("No space found in:", value);
+            return command + '"property": "' + value + '"';
+        }
+
+        const property = value.slice(0, firstSpaceIndex).trim();
+        const quality = value.slice(firstSpaceIndex + 1).trim();
+        //console.log("Split into:", { property, quality });
+
+        let string = command + '"property": "' + property + '"';
+        
+        // Handle different data types with more logging
+        if (quality.startsWith("sel:")) {
+            // console.log("Processing select:", quality);
+            string += ', "select": { "equals": "' + quality.substring(4) + '"}'
+        } else if (quality.startsWith("chk:")) {
+            // console.log("Processing checkbox:", quality);
+            string += ', "checkbox": { "equals": ' + quality.substring(4).toLowerCase() + '}'
+        } else if (quality.startsWith("txt:")) {
+            // console.log("Processing text:", quality);
+            string += ', "rich_text": { "equals": "' + quality.substring(4) + '"}'
+        } else if (emailRegex.test(quality)) {
+            const email = quality.match(emailRegex)![1]
+            string += ', "email": { "equals": "' + email + '"}'
+        } else if (dateRegex.test(quality)) {
+            const [_, operator = "=", date] = quality.match(dateRegex) || []
+            const comparator = operator === "=" ? "equals" : 
+                              operator === ">" ? "greater_than" :
+                              operator === ">=" ? "greater_than_or_equal_to" :
+                              operator === "<" ? "less_than" :
+                              operator === "<=" ? "less_than_or_equal_to" : "equals"
+            string += ', "date": { "' + comparator + '": "' + date + '"}'
+        } else if (numberRegex.test(quality)) {
+            const [_, operator = "=", num] = quality.match(numberRegex) || []
+            const comparator = operator === "=" ? "equals" : 
+                              operator === ">" ? "greater_than" :
+                              operator === ">=" ? "greater_than_or_equal_to" :
+                              operator === "<" ? "less_than" :
+                              operator === "<=" ? "less_than_or_equal_to" : "equals"
+            string += ', "number": { "' + comparator + '": ' + num + '}'
+        } else {
+            // console.log("Defaulting to rich_text:", quality);
+            string += ', "rich_text": { "equals": "' + quality + '"}'
+        }
+
+        console.log("Final string:", string);
+        return command ? string : '{' + string + '}';
     }
 
     private dateNumResult(range: number[], quality: string){
@@ -182,7 +227,7 @@ interface propObject {
 }
 
 class databaseWrite extends notionRequest {
-    dir = "/pages"
+    dir = "/notion/pages"
     method = "POST"
     pageObjectArray: propObject[]
 
@@ -196,9 +241,9 @@ class databaseWrite extends notionRequest {
         this.method = "POST"
         const search = this.pageObjectArray[0]
         const property = this.pageObjectArray[1]
-        console.log(search.Property)
-        const page = new databaseQuery("{" + search.Name + " is_" + search.Property.email + "}", this.location)
-        const json = await (await (page.execute())).json()
+        
+        const query = new databaseQuery("{" + search.Name + " email:" + search.Property.email + "}", this.location)
+        const json = await (await (query.execute())).json()
         
         const id = json ? json.results[0].id : ""
 

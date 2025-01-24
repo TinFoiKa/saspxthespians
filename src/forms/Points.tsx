@@ -130,7 +130,7 @@ const Points = () => {
             const auth = cookie.auth 
 
             const userdata = "Users"
-            const query = new databaseQuery("{Email is_"+ auth.email +"}", userdata)
+            const query = new databaseQuery("{Email email:"+ auth.email +"}", userdata)
             const response = await (await query.execute()).json()
             console.log(response)
             const properties = response.results[0].properties

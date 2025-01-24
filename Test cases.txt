@@ -1,0 +1,10 @@
+Test cases
+
+
+
+Control Panel
+Test case 1: {Name txt:Aaron Li} AND [{Role sel:Officer} OR {Role sel:Apprentice}]  WORKS
+
+Test case 2: [{Role sel:Officer} OR {Role sel:Apprentice}] AND {Name txt:Aaron Li} WORKS
+
+Test case 3: {Role sel:Officer} WORKS

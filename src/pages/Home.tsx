@@ -26,9 +26,11 @@ const Home = () => {
             console.log("based")
             const getPageData = async () => {
                 const websitePhotos = "Media"
-                const query = new databaseQuery("{Displayed checked}", websitePhotos)
+                console.log("Media")
+                console.log("{Displayed chk:true}")
+                const query = new databaseQuery("{Displayed chk:true}", websitePhotos)
                 const response = await (await query.execute()).json()
-                console.log(response)
+                //console.log(response)
                 setPhotos(response)
             }
         
@@ -51,11 +53,16 @@ const Home = () => {
         return ""
     }
     
-    const getInsert = (tag: number) => {
+    const getInsert = (tag: number, fixedSize: boolean = false) => {
         const url = getPhotoLink(tag)
         
         return url != "" ?
-        <img src = {url} className = "images"></img> 
+        <img src={url} className="images" style={fixedSize ? {
+            padding: '20px',
+            width: '300px',
+            height: '400px',
+            objectFit: 'cover'
+        } : undefined}></img> 
         : 
         "waiting for a response from Notion API..."
     }
@@ -83,21 +90,34 @@ const Home = () => {
     <div className="content">
         <h2 className="content-head is-center">Shows and Dates</h2>
 
-        <div className="pure-flex" style={{ display: 'flex', justifyContent: 'center', gap: '2rem' }}>
-            <div className="show-box l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+        <div className="pure-flex" style={{ 
+            display: 'flex', 
+            justifyContent: 'center', 
+            gap: '2rem',
+            textAlign: 'center'
+        }}>
+            <div className="show-box l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
                 <h3 className="content-subhead">
                     <i className="fa fa-rocket"></i>
                     Fall Play
                 </h3>
-                {getInsert(7)} 
+                {getInsert(7, true)} 
             </div>
 
-            <div className="show-box l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4">
+            <div className="show-box l-box pure-u-1 pure-u-md-1-2 pure-u-lg-1-4" style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center'
+            }}>
                 <h3 className="content-subhead">
                     <i className="fa fa-mobile"></i>
                     Spring Musical
                 </h3>
-                {getInsert(5)} 
+                {getInsert(5, true)} 
             </div>
         </div>
     </div>

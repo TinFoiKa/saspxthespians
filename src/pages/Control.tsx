@@ -1,4 +1,5 @@
-import { ChangeEvent, KeyboardEvent, useState } from "react"
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { ChangeEvent, useState } from "react"
 // import Loading from "../components/Loading.js"
 console.log("entered control")
 import "./Surfaces.css"
@@ -18,6 +19,9 @@ const Control = () => {
         sendLocation: "",
         query: ""
     })
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const [queryResults, setQueryResults] = useState<any[]>([])
+    const [queryError, setQueryError] = useState<string>("")
 
     /*useEffect(() => { 
         const handleLoad = async () => {
@@ -35,8 +39,8 @@ const Control = () => {
         handleLoad()
     }, [])*/
 
-    // handling constituent partitions.
-    /*const partition = (array: [{part: any, index: number}], low: number, high: number) => {
+    /*/ handling constituent partitions.
+    const partition = (array: [{part: any, index: number}], low: number, high: number) => {
         const pivot = array[high].part
         // if partition on right, is position of previous pivot. if on left, inconsequential (? It works in my head)
         let i = low - 1 
@@ -102,9 +106,9 @@ const Control = () => {
         }))
 
         return true
-    }/*
+    }
 
-    // recursive sorting algorithm
+    /*/ recursive sorting algorithm
     const quickSort = (array: [{part: any, index: number}], low: number, high: number) => {
         console.log("hello")
         if (low < high) { // break case is if low == high, meaning the sort is resolved
@@ -172,6 +176,28 @@ const Control = () => {
         setInsertType(eventData)
     }*/
 
+    const directQueryRequest = async () => {
+        try {
+            setQueryError("")
+            const query = new databaseQuery(info.query, info.sendLocation || "Users") // default to users database
+            const response = await query.execute()
+            const data = await response.json()
+
+            if (response.status === 400) {
+                setQueryError("Database query error. Recheck query syntax, or report the issue.")
+                setQueryResults([])
+            } else if (data.results == ""){
+                setQueryError("No results found. Please try a different query.")
+                setQueryResults([])
+            } else if (response.status === 200 && data.results) {
+                setQueryResults(data.results)
+            }
+        } catch (error) {
+            setQueryError("An error occurred while fetching data.")
+            setQueryResults([])
+        }
+    }
+
     return (
         <>
             {/*<div hidden id = "" className = "overlay">
@@ -234,12 +260,62 @@ const Control = () => {
                                 name = "query"
                                 value = {info.query}
                                 onChange={trackChange}
-                                placeholder="e.g. {[Role is_Officer] OR [(Role is_Apprentice) AND (Considered is_true)]} AND {Points >100} Check Documentation"
+                                placeholder="e.g. ({Role of_Officer} OR [{Role of_Apprentice} AND {Considered checked}]) AND (Points >100)"
                             />
                             </div>
                         </label>
+                        <button 
+                            onClick={directQueryRequest}
+                            className="negatived button"
+                            style={{ marginTop: '10px' }}
+                        >
+                            Run Query
+                        </button>
                     </div>
                     
+                    <div className="sectionHead">
+                        <h3>Query Results</h3>
+                        {queryError && (
+                            <div className="error-message" style={{ color: 'red', marginBottom: '10px' }}>
+                                {queryError}
+                                {queryError.includes("syntax") && (
+                                    <a href="https://www.notion.so/Documentation-8f8905f737cb473b9084d59177616922"> View Syntax Documentation</a>
+                                )}
+                            </div>
+                        )}
+                        {queryResults.length > 0 && (
+                            <div className="table-container" style={{ overflowX: 'auto' }}>
+                                <table className="results-table" style={{ width: '100%', borderCollapse: 'collapse' }}>
+                                    <thead>
+                                        <tr>
+                                            {Object.keys(queryResults[0].properties).map((header) => (
+                                                <th key={header} style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                                    {header}
+                                                </th>
+                                            ))}
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {queryResults.map((row, index) => (
+                                            <tr key={index}>
+                                                {Object.values(row.properties).map((cell: any, cellIndex) => (
+                                                    <td key={cellIndex} style={{ padding: '8px', borderBottom: '1px solid #ddd' }}>
+                                                        {cell.title?.[0]?.plain_text || // for title type
+                                                         cell.rich_text?.[0]?.plain_text || // for text type
+                                                         cell.number || // for number type
+                                                         cell.select?.name || // for select type
+                                                         cell.email || // for email type
+                                                         (cell.checkbox !== undefined ? cell.checkbox.toString() : '') || // for checkbox type
+                                                         JSON.stringify(cell)} {/* fallback */}
+                                                    </td>
+                                                ))}
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        )}
+                    </div>
                 </div>
             </div>
         </>
